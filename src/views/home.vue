@@ -1,13 +1,11 @@
 <template>
-  <AppTitle/>
   <div class="app-wrapper">
     <div class="app-wrapper-menu">
       <Sider />
     </div>
     <div class="app-wrapper-content">
-      <Tools 
-      @onEdit="editHandler" 
-      :isEdit="isEdit" />
+      <app-title />
+      <Tools @onEdit="editHandler" :isEdit="isEdit" />
       <Editor :isEdit="isEdit" class="editor" />
     </div>
   </div>
@@ -15,8 +13,8 @@
 <script>
 import Editor from "@/components/editor.vue";
 import Tools from "@/components/tools.vue";
+import AppTitle from "@/components/apptitle.vue";
 import Sider from "@/components/sider.vue";
-import AppTitle from "@/components/apptitle";
 export default {
   name: "home",
   components: { Editor, Tools, Sider, AppTitle },
@@ -38,7 +36,7 @@ export default {
   width: 100%;
   display: flex;
   position: absolute;
-  top: 60px;
+  top: 0;
   bottom: 0;
   left: 0;
   right: 0;
@@ -48,7 +46,7 @@ export default {
   display: flex;
   flex-direction: column;
   .editor {
-    height: calc(100% - 60px);
+    height: calc(100% - 92px);
   }
 }
 </style>

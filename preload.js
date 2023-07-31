@@ -1,7 +1,7 @@
 const { contextBridge, ipcRenderer } = require('electron')
 const fs = require('fs');
 const path = require('path');
-
+const database = require("./database/index");
 contextBridge.exposeInMainWorld('appContext', {
   node: () => process.versions.node,
   chrome: () => process.versions.chrome,
@@ -9,5 +9,6 @@ contextBridge.exposeInMainWorld('appContext', {
   ipc: ipcRenderer,
   fs,
   path,
+  database,
   cwd: () => process.cwd()
 });
