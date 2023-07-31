@@ -1,7 +1,7 @@
 <template>
   <div class="app-wrapper">
     <div class="app-wrapper-menu">
-      <Sider />
+      <Sider :isEdit="isEdit" />
     </div>
     <div class="app-wrapper-content">
       <app-title />
@@ -18,9 +18,10 @@ import Sider from "@/components/sider.vue";
 export default {
   name: "home",
   components: { Editor, Tools, Sider, AppTitle },
+
   data() {
     return {
-      isEdit: true,
+      isEdit: false,
     };
   },
   methods: {
