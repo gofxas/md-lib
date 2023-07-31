@@ -1,0 +1,42 @@
+@font-face {
+  font-family: "Fira Code";
+  src: url(/font/FiraCode-Regular.ttf);
+}
+@font-face {
+  font-family: "lxgw";
+  src: url(/font/LXGWWenKai-Regular.ttf);
+  font-weight: normal;
+}
+@font-face {
+  font-family: "lxgw";
+  src: url(/font/LXGWWenKai-Bold.ttf);
+  font-weight: bold;
+}
+@font-face {
+  font-family: "lxgw";
+  src: url(/font/LXGWWenKai-Light.ttf);
+  font-weight: lighter;
+}
+
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+body {
+  font-family: PingFang SC, -apple-system, BlinkMacSystemFont, Helvetica Neue,
+    Helvetica, sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
