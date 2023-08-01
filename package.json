@@ -1,8 +1,10 @@
 {
   "name": "md-lib",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "main": "main.js",
+  "description":"markdown library",
+  "author":"ryu",
   "scripts": {
     "dev:h5": "vite",
     "build": "vite build",
@@ -59,5 +61,30 @@
     "vfonts": "^0.0.3",
     "vite": "^4.4.5"
   },
-  "build": {}
+  "build": {
+    "icon": "./icon.ico",
+    "asar": true,
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "deleteAppDataOnUninstall": false,
+      "shortcutName": "文笥"
+    },
+    "win": {
+      "artifactName": "${productName}_${version}.${ext}",
+      "icon": "./icon.ico",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "ia32",
+            "x64"
+          ]
+        }
+      ]
+    }
+  }
 }
