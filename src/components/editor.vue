@@ -118,6 +118,9 @@ export default {
   padding: 24px;
   background-color: transparent;
 }
+.CodeMirror  {
+  background-color: transparent;
+}
 .CodeMirror-scroll {
   background-color: transparent;
 }
