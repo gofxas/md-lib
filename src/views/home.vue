@@ -18,7 +18,6 @@ import Sider from "@/components/sider.vue";
 export default {
   name: "home",
   components: { Editor, Tools, Sider, AppTitle },
-
   data() {
     return {
       isEdit: false,

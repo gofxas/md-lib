@@ -1,5 +1,6 @@
 const { Files } = require("./index");
-
+const { Sequelize } = require("sequelize");
+const Op = Sequelize.Op;
 const findById = async (id) => {
   const result = await Files.findByPk(id);
   return result;
@@ -26,17 +27,19 @@ const update = async (values, query) => {
   return result;
 };
 
-const deleteDoc = async filter => {
+const deleteDoc = async (ids = []) => {
   const result = await Files.destroy({
-    where: filter
-   })
-   return result;
-}
+    where: {
+      id: { [Op.in]: ids },
+    },
+  });
+  return result;
+};
 
 module.exports = {
   findById,
   findAndCountAll,
   create,
   update,
-  deleteDoc
+  deleteDoc,
 };

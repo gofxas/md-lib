@@ -9,4 +9,5 @@ import 'vfonts/FiraCode.css'
 import "github-markdown-css/github-markdown-light.css";
 
 const Instance = createApp(App);
+
 Instance.use(store).use(router).mount('#app')

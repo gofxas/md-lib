@@ -4,6 +4,7 @@ export default {
     selectedKeys: [],
     value: ``,
     title: "",
+    placement: 'bottom-right'
   }),
   mutations: {
     setSelectedKeys(state, payload) {
@@ -15,6 +16,9 @@ export default {
     setTitle(state, title) {
       state.title = title;
     },
+    setPlacement(placement) {
+        state.placement = placement;
+    }
   },
   actions: {
     getValue({ commit }, { id }) {

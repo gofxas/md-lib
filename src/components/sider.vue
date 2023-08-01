@@ -208,9 +208,10 @@ export default {
           }
           break;
         case 'del':
-          console.log(this.rightClickOption.id, '文档删除！');
-          if (window.appContext && window.appContext.electron()){
-            appContext.database.deleteDoc({id: this.rightClickOption.id}).then(() => {
+          if (window.appContext && window.appContext.electron()) {
+            const ids = this.flatTree(this.rightClickOption);
+            console.log(ids)
+            appContext.database.deleteDoc(ids).then(() => {
               this.initTreeData();
             })
           }
@@ -406,9 +407,25 @@ export default {
           const parent = map[item.pid]
           parent.children = parent.children || [];
           parent.children.push(item)
+        } else {
+          item.isLeaf = true
         }
       }
       return res;
+    },
+    // 获取节点下面的 所有的id 
+    flatTree(obj) {
+      const ids = [];
+      const loop = (obj) => {
+        if (obj.id) { ids.push(obj.id) };
+        if (obj.children && obj.children.length) {
+          for (let i = 0; i < obj.children.length; i++) {
+            loop(obj.children[i])
+          }
+        }
+      };
+      loop(obj)
+      return ids;
     }
   },
   created() {
