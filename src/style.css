@@ -40,3 +40,7 @@ a {
   color: inherit;
   text-decoration: none;
 }
+
+.n-input {
+  background-color: transparent;
+}

@@ -18,4 +18,6 @@ const { placement } = useMapState("layout", ["placement"]);
 const { setPlacement } = useMapMutations("layout", ["setPlacement"]);
 </script>
 
-<style scoped></style>
+<style scoped>
+
+</style>
