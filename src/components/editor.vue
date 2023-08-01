@@ -99,8 +99,11 @@ export default {
   font-family: "Fira Code", PingFang SC, -apple-system, BlinkMacSystemFont,
     Helvetica Neue, Helvetica, sans-serif !important;
   border: none;
+  background-color: transparent;
 }
-
+.bytemd-toolbar {
+  background-color: transparent;
+}
 .markdown-body,
 .CodeMirror pre.CodeMirror-line,
 .CodeMirror pre.CodeMirror-line-like,
@@ -113,8 +116,11 @@ export default {
 
 .markdown-body {
   padding: 24px;
+  background-color: transparent;
 }
-
+.CodeMirror-scroll {
+  background-color: transparent;
+}
 .markdown-body tt,
 .markdown-body code,
 .markdown-body samp {
