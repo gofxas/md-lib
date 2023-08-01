@@ -15,6 +15,7 @@ import Editor from "@/components/editor.vue";
 import Tools from "@/components/tools.vue";
 import AppTitle from "@/components/apptitle.vue";
 import Sider from "@/components/sider.vue";
+import { mapMutations } from 'vuex'
 export default {
   name: "home",
   components: { Editor, Tools, Sider, AppTitle },
@@ -24,7 +25,11 @@ export default {
     };
   },
   methods: {
+    ...mapMutations('layout',['setBackup']),
     editHandler(e) {
+      if (e) {
+        this.setBackup()
+      }
       this.isEdit = e;
     },
   },

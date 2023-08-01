@@ -432,7 +432,11 @@ export default {
     }
   },
   created() {
-    this.initTreeData()
+    this.initTreeData();
+    this.$event.on('refresh', () => {
+      console.log('refresh')
+      this.initTreeData()
+    })
   }
 };
 </script>

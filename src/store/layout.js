@@ -5,6 +5,10 @@ export default {
     value: ``,
     title: "",
     placement: "bottom-right",
+    backup: {
+      value: "",
+      title: "",
+    },
   }),
   mutations: {
     setSelectedKeys(state, payload) {
@@ -19,6 +23,14 @@ export default {
     setPlacement(state, placement) {
       state.placement = placement || "bottom-right";
     },
+    setBackup(state) {
+      state.backup = { value: state.value, title: state.title };
+    },
+    getBackup(state) {
+      const { value, title } = state.backup;
+      state.value = value;
+      state.title = title;
+    }
   },
   actions: {
     getValue({ commit }, { id }) {
