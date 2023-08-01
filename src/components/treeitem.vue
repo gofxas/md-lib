@@ -15,7 +15,7 @@ export default {
   methods: {
     handleContextMenu(e) {
       e.preventDefault();
-      this.$emit('contextmenu', {
+      this.$emit('setmenu', {
         x: e.clientX,
         y: e.clientY,
         option: this.option

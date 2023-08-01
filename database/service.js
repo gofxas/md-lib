@@ -26,9 +26,17 @@ const update = async (values, query) => {
   return result;
 };
 
+const deleteDoc = async filter => {
+  const result = await Files.destroy({
+    where: filter
+   })
+   return result;
+}
+
 module.exports = {
   findById,
   findAndCountAll,
   create,
   update,
+  deleteDoc
 };

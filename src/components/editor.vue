@@ -1,26 +1,7 @@
 <template>
-  <Editor
-    v-if="isEdit"
-    :locale="locales['zh_Hans']"
-    :value="value"
-    :editorConfig="{
-      sidebar: null,
-    }"
-    :uploadImages="
-      (files) => {
-        return Promise.all(
-          files.map((file) => {
-            // TODO:
-            return {
-              url: 'https://picsum.photos/300',
-            };
-          })
-        );
-      }
-    "
-    :plugins="plugins"
-    @change="handleChange"
-  />
+  <Editor v-if="isEdit" :locale="locales['zh_Hans']" :value="value" :editorConfig="{
+    sidebar: null,
+  }" :uploadImages="uploadFile" :plugins="plugins" @change="handleChange" />
   <n-scrollbar class="viewer" v-else>
     <Viewer class="markdown-body" :value="value" :plugins="plugins" />
   </n-scrollbar>
@@ -60,7 +41,7 @@ const plugins = [
     locale: mermaidLocales[localeKey],
   }),
 ];
-
+import { mapState, mapMutations, mapActions } from 'vuex'
 export default {
   name: "editor",
   components: { Editor, Viewer, NScrollbar },
@@ -73,99 +54,39 @@ export default {
   data() {
     return {
       locales,
-      value: `# 你好 hello
-- [x]  123123  
-- [ ]  12312312
-- [ ]  asdgas
-- [ ]  asgasdaf
-- [ ]  gasd
-- [ ]  ga
-- [ ]  agagggggasd
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-- [ ]  123123123fasdf
-`,
       plugins,
     };
   },
+  computed: {
+    ...mapState('layout', ['selectedKeys', 'value'])
+  },
+  watch: {
+    selectedKeys: {
+      handler(n, o) {
+        if (n.length) {
+          this.getValue({ id: n[0] })
+        } else {
+          this.getValue({ id: 1 })
+        }
+      },
+      immediate: true
+    }
+  },
   methods: {
+    ...mapMutations('layout', ['setValue']),
+    ...mapActions('layout', ['getValue']),
+    uploadFile: (files) => {
+      return Promise.all(
+        files.map((file) => {
+          // TODO:
+          return {
+            url: 'https://picsum.photos/300',
+          };
+        })
+      );
+    },
     handleChange(v) {
-      this.value = v;
+      this.setValue(v);
     },
   },
 };
@@ -179,18 +100,22 @@ export default {
     Helvetica Neue, Helvetica, sans-serif !important;
   border: none;
 }
+
 .markdown-body,
 .CodeMirror pre.CodeMirror-line,
 .CodeMirror pre.CodeMirror-line-like {
   font-family: "Fira Code", "lxgw", PingFang SC, -apple-system,
     BlinkMacSystemFont, Helvetica Neue, Helvetica, sans-serif !important;
 }
+
 .markdown-body {
   padding: 24px;
 }
+
 .viewer {
   overflow: auto;
 }
+
 .bytemd-preview,
 .CodeMirror-vscrollbar {
   &::-webkit-scrollbar {
@@ -198,10 +123,12 @@ export default {
     height: 5px;
     cursor: pointer;
   }
+
   &::-webkit-scrollbar-thumb {
     border-radius: 3px;
     background-color: #d8dee4;
   }
+
   &::-webkit-scrollbar-track {
     border-radius: 3px;
     background-color: transparent;

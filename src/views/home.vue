@@ -1,7 +1,7 @@
 <template>
   <div class="app-wrapper">
     <div class="app-wrapper-menu">
-      <Sider :isEdit="isEdit" />
+      <Sider :isEdit="isEdit" @edit="isEdit = true"/>
     </div>
     <div class="app-wrapper-content">
       <app-title />

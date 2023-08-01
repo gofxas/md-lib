@@ -42,7 +42,7 @@
       <n-tree ref="treeInstRef" virtual-scroll block-line :data="data" key-field="id" label-field="title"
         :default-selected-keys="selectedKeys" :selected-keys="selectedKeys" :cancelable="false" :expand-on-click="true"
         :render-label="renderLabel" :render-switcher-icon="renderSwitcherIcon" :on-update:selected-keys="selectedHandler"
-        :on-update:expanded-keys="updatePrefixWithExpaned" :on-load="handleLoad" style="height: calc(100% - 100px)" />
+        :on-update:expanded-keys="updatePrefixWithExpaned" style="height: calc(100% - 100px)" />
     </template>
     <template v-else>
       <div class="no-data-tree" style="height: calc(100% - 100px)">
@@ -66,18 +66,22 @@
       <n-input autofocus v-model:value="docname" type="text" placeholder="基本的 Input" />
       <template #footer>
         <n-space justify="end">
-          <n-button type="primary">创建</n-button>
+          <n-button type="primary" @click="createNew">创建</n-button>
           <n-button @click="cancelCreate">取消</n-button>
         </n-space>
       </template>
     </n-card>
   </n-modal>
+  <n-dropdown size="small" placement="bottom-start" trigger="manual" :x="dropdownOpt.x" :y="dropdownOpt.y"
+    :options="options" :show="dropdownOpt.show" :on-clickoutside="onClickoutside" @select="handleDropdownSelect" />
 </template>
 <script>
-import { NModal, NCard, NTree, NSpace, NButton, NIcon, NInput } from "naive-ui";
+import { NDropdown, NModal, NCard, NTree, NSpace, NButton, NIcon, NInput } from "naive-ui";
 import { h } from "vue";
-import { ChevronRight16Regular, StarEmphasis24Regular, Folder20Regular, FolderOpen20Regular } from '@vicons/fluent'
+import { ChevronRight16Regular, StarEmphasis24Regular, Folder20Regular, FolderOpen20Regular, LockClosed16Regular, LockOpen16Regular } from '@vicons/fluent'
 import TreeItem from '@/components/treeitem';
+import DropdownItem from '@/components/dropdownitem';
+import { mapState, mapMutations } from 'vuex'
 export default {
   name: "app-sider",
   components: {
@@ -89,7 +93,8 @@ export default {
     NIcon,
     NInput,
     StarEmphasis24Regular,
-    TreeItem
+    TreeItem,
+    NDropdown
   },
   props: {
     isEdit: {
@@ -99,13 +104,28 @@ export default {
   },
   data() {
     return {
+      // 下拉菜单条目
+      options: [
+        { label: () => h(DropdownItem, { label: "查看", type: "primary" }), key: 'view', },
+        { label: () => h(DropdownItem, { label: "编辑", type: "info" }), key: 'edit', },
+        { label: () => h(DropdownItem, { label: "新增", type: "default" }), key: 'add', },
+        { label: () => h(DropdownItem, { label: "删除", type: "error" }), key: 'del', },
+      ],
+      // 下拉菜单位置配置
+      dropdownOpt: {
+        show: false,
+        x: 0,
+        y: 0
+      },
+      rightClickOption: {},
+      // 菜单数据
       data: [],
-      selectedKeys: [],
+
       showModal: false,
       docname: '新的文档',
       renderLabel: ({ option }) => h(TreeItem, {
         option,
-        onContextmenu: this.handleContextMenu
+        onSetmenu: this.handleContextMenu
       }),
       renderSwitcherIcon: ({ expanded }) => h(NIcon, null, {
         default: () => h(ChevronRight16Regular)
@@ -128,9 +148,84 @@ export default {
       }
     };
   },
+  computed: {
+    ...mapState('layout', ['selectedKeys'])
+  },
   methods: {
+    ...mapMutations('layout', ['setSelectedKeys']),
+    createNew() {
+      if (window.appContext && window.appContext.electron()) {
+        window.appContext.database
+          .create({ title: this.docname, pid: this.rightClickOption?.id || 1 })
+          .then(res => {
+            this.initTreeData();
+            this.cancelCreate();
+          })
+      }
+    },
+    onClickoutside() {
+      this.dropdownOpt.show = false
+    },
+    handleDropdownSelect(key) {
+      // $message.info(String(key));
+      switch (key) {
+        case 'view':
+          if (this.isEdit) {
+            window.$message.info(
+              "文档正在编辑 并未保存！",
+              {
+                keepAliveOnHover: true
+              }
+            )
+          } else {
+            this.selectedKeys = this.setSelectedKeys([this.rightClickOption.id])
+          }
+          break;
+        case 'edit':
+          if (this.isEdit) {
+            window.$message.info(
+              "文档正在编辑 并未保存！",
+              {
+                keepAliveOnHover: true
+              }
+            )
+          } else {
+            this.selectedKeys = this.setSelectedKeys([this.rightClickOption.id])
+            this.$emit('edit', true)
+          }
+          break;
+        case 'add':
+          if (this.isEdit) {
+            window.$message.info(
+              "文档正在编辑 并未保存！",
+              {
+                keepAliveOnHover: true
+              }
+            )
+          } else {
+            this.selectedKeys = this.setSelectedKeys([this.rightClickOption.id]);
+            this.showModal = true
+          }
+          break;
+        case 'del':
+          console.log(this.rightClickOption.id, '文档删除！');
+          if (window.appContext && window.appContext.electron()){
+            appContext.database.deleteDoc({id: this.rightClickOption.id}).then(() => {
+              this.initTreeData();
+            })
+          }
+          break;
+      }
+      this.onClickoutside()
+    },
     handleContextMenu(options) {
-      console.log(options)
+      const { x, y, option } = options;
+      this.rightClickOption = option;
+      this.dropdownOpt = {
+        show: true,
+        x,
+        y
+      }
     },
     cancelCreate() {
       this.docname = "新的文档"
@@ -138,9 +233,8 @@ export default {
     },
     selectedHandler(keys, option, meta) {
       if (meta.action === 'select' && !this.isEdit) {
-        console.log(keys, option, meta, this.selectedKeys)
-        this.selectedKeys = keys;
-        this.handleLoad(meta.node);
+        this.selectedKeys = this.setSelectedKeys(keys);
+        this.rightClickOption = option[0];
       }
       // 编辑状态？
       if (this.isEdit) {
@@ -152,18 +246,21 @@ export default {
         )
       }
     },
-    // electron 
+    // electron init tree
     initTreeData() {
       if (window.appContext && window.appContext.electron()) {
         window.appContext.database
-          .findAndCountAll({ pid: 1 })
+          .findAndCountAll({})
           .then((res) => {
-            this.data = res.rows.map(item => ({
-              ...item, isLeaf: false,
+            const list = res.rows.map(item => ({
+              ...item,
               prefix: () => h(NIcon, null, {
                 default: () => h(Folder20Regular)
               })
             }))
+            const treeList = this.convert(list);
+            console.log(treeList)
+            this.data = treeList;
           });
       } else {
         this.data = [
@@ -290,39 +387,28 @@ export default {
         ]
       }
     },
-    handleLoad(node) {
-      if (window.appContext && window.appContext.electron()) {
-        return new Promise((resolve) => {
-          window.appContext.database
-            .findAndCountAll({ pid: node.id })
-            .then((res) => {
-              if (res.rows.length === 0) {
-                node.isLeaf = true
-              }
-              node.children = res.rows.map(item => ({
-                ...item, isLeaf: false,
-                prefix: () => h(NIcon, null, {
-                  default: () => h(Folder20Regular)
-                })
-              }))
-              resolve()
-            });
-        })
-      } else {
-        return new Promise((resolve) => {
-          setTimeout(() => {
-            node.children = [
-              {
-                title: node.title + 'child',
-                id: node.id + (node.title),
-                isLeaf: false
-              }
-            ];
-            resolve();
-          }, 1e3);
-        });
+    // 转化数组成 tree 结构
+    convert(list) {
+      const res = [];
+      const map = list.reduce((res, v) => (
+        res[v.id] = v, v
+          .prefix = () => h(NIcon, null, {
+            default: () => h(Folder20Regular)
+          }),
+        v.suffix = () => h(NIcon, null, { default: () => v.passwd ? h(LockClosed16Regular) : '' }),
+        v.children = [], res), {})
+      for (const item of list) {
+        if (item.pid === 1) {
+          res.push(item);
+          continue
+        }
+        if (item.pid in map) {
+          const parent = map[item.pid]
+          parent.children = parent.children || [];
+          parent.children.push(item)
+        }
       }
-
+      return res;
     }
   },
   created() {
