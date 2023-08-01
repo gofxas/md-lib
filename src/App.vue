@@ -1,7 +1,6 @@
 <template>
   <n-config-provider :locale="zhCN" :date-locale="dateZhCN">
     <RouterView />
-
     <n-message-provider :placement="placement">
       <Message />
     </n-message-provider>

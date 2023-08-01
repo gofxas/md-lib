@@ -41,7 +41,7 @@ const createWindow = () => {
   })
   
   // 打开开发工具
-  mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
 }
 
 // 这段程序将会在 Electron 结束初始化
@@ -49,12 +49,12 @@ const createWindow = () => {
 // 部分 API 在 ready 事件触发后才能使用。
 app.whenReady().then(() => {
   createWindow();
-  // globalShortcut.register('f5',function(){
-  //   console.log('f5 is pressed')
-  // })
-  // globalShortcut.register('CommandOrControl+W',function(){
-  //   console.log('CommandOrControl+W is pressed')
-  // })
+  globalShortcut.register('f5',function(){
+    console.log('f5 is pressed')
+  })
+  globalShortcut.register('CommandOrControl+W',function(){
+    console.log('CommandOrControl+W is pressed')
+  })
   app.on('activate', () => {
     // 在 macOS 系统内, 如果没有已开启的应用窗口
     // 点击托盘图标时通常会重新创建一个新窗口
