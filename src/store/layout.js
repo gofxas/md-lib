@@ -4,7 +4,7 @@ export default {
     selectedKeys: [],
     value: ``,
     title: "",
-    placement: 'bottom-right'
+    placement: "bottom-right",
   }),
   mutations: {
     setSelectedKeys(state, payload) {
@@ -16,9 +16,9 @@ export default {
     setTitle(state, title) {
       state.title = title;
     },
-    setPlacement(placement) {
-        state.placement = placement;
-    }
+    setPlacement(state, placement) {
+      state.placement = placement || "bottom-right";
+    },
   },
   actions: {
     getValue({ commit }, { id }) {
@@ -26,8 +26,8 @@ export default {
         appContext.database.findById(id).then((res) => {
           console.log(res.dataValues);
           const { title, content } = res.dataValues;
-          commit('setValue',(content || ""));
-          commit('setTitle',(title || ""));
+          commit("setValue", content || "");
+          commit("setTitle", title || "");
         });
       }
     },

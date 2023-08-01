@@ -76,12 +76,13 @@
     :options="options" :show="dropdownOpt.show" :on-clickoutside="onClickoutside" @select="handleDropdownSelect" />
 </template>
 <script>
-import { NDropdown, NModal, NCard, NTree, NSpace, NButton, NIcon, NInput } from "naive-ui";
+import { NDropdown, NAlert, NModal, NCard, NTree, NSpace, NButton, NIcon, NInput } from "naive-ui";
 import { h } from "vue";
 import { ChevronRight16Regular, StarEmphasis24Regular, Folder20Regular, FolderOpen20Regular, LockClosed16Regular, LockOpen16Regular } from '@vicons/fluent'
 import TreeItem from '@/components/treeitem';
 import DropdownItem from '@/components/dropdownitem';
 import { mapState, mapMutations } from 'vuex'
+
 export default {
   name: "app-sider",
   components: {
@@ -152,7 +153,7 @@ export default {
     ...mapState('layout', ['selectedKeys'])
   },
   methods: {
-    ...mapMutations('layout', ['setSelectedKeys']),
+    ...mapMutations('layout', ['setSelectedKeys', 'setPlacement']),
     createNew() {
       if (window.appContext && window.appContext.electron()) {
         window.appContext.database
@@ -208,9 +209,11 @@ export default {
           }
           break;
         case 'del':
-          if (window.appContext && window.appContext.electron()) {
-            const ids = this.flatTree(this.rightClickOption);
-            console.log(ids)
+          const ids = this.flatTree(this.rightClickOption);
+          console.log(ids)
+          const confirm = window.confirm('"删除将会把文档和文档子集全部删除，无法恢复。",');
+
+          if (confirm && window.appContext && window.appContext.electron()) {
             appContext.database.deleteDoc(ids).then(() => {
               this.initTreeData();
             })
