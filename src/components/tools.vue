@@ -101,6 +101,10 @@ export default {
       this.$emit("onEdit", false);
     },
     deleteHandler() {
+      if (this.selectedKeys && this.selectedKeys[0] == 1) {
+        $message.error("根文件夹不能删除")
+        return;
+      }
       if (window.appContext && window.appContext.electron()) {
         appContext.database.deleteDoc(this.selectedKeys)
         .then(() => {

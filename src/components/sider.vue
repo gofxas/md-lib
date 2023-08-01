@@ -3,7 +3,10 @@
     <div class="app-sider-head">
       <n-space align="center" justify="space-between">
         <h2 class="drager">
-          <n-icon size="20"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 113.49 100">
+          <n-icon
+          @click="homeMD"
+          size="20"
+          style="margin-right: 12px;cursor: pointer;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 113.49 100">
               <g>
                 <g>
                   <path fill="#02035e"
@@ -15,9 +18,9 @@
                 </g>
               </g>
             </svg></n-icon>
-          文笥
+          <span>文笥</span>
         </h2>
-        <n-button @click="showModal = true" quaternary circle><n-icon size="18"><svg xmlns="http://www.w3.org/2000/svg"
+        <n-button @click="handleRootDoc" quaternary circle><n-icon size="18"><svg xmlns="http://www.w3.org/2000/svg"
               xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24">
               <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" fill="currentColor"></path>
             </svg></n-icon></n-button>
@@ -50,7 +53,7 @@
           <StarEmphasis24Regular />
         </n-icon>
         <p style="color:#b5aa90">请先添加文档</p>
-        <n-button @click="showModal = true" style="width: 100%;margin-top: 24px;">
+        <n-button @click="handleRootDoc" style="width: 100%;margin-top: 24px;">
           <n-icon size="18">
             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24">
               <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" fill="currentColor"></path>
@@ -154,6 +157,10 @@ export default {
   },
   methods: {
     ...mapMutations('layout', ['setSelectedKeys', 'setPlacement']),
+    homeMD() {
+      this.setSelectedKeys([1]);
+      this.rightClickOption = {};
+    },
     createNew() {
       if (window.appContext && window.appContext.electron()) {
         window.appContext.database
@@ -163,6 +170,10 @@ export default {
             this.cancelCreate();
           })
       }
+    },
+    handleRootDoc() {
+      this.showModal = true;
+      this.rightClickOption = {};
     },
     onClickoutside() {
       this.dropdownOpt.show = false
@@ -210,12 +221,13 @@ export default {
           break;
         case 'del':
           const ids = this.flatTree(this.rightClickOption);
-          console.log(ids)
           const confirm = window.confirm('删除将会把文档和文档子集全部删除，无法恢复。');
 
           if (confirm && window.appContext && window.appContext.electron()) {
             appContext.database.deleteDoc(ids).then(() => {
               this.initTreeData();
+              this.setSelectedKeys([1]);
+              this.rightClickOption = {};
             })
           }
           break;
@@ -434,7 +446,8 @@ export default {
   created() {
     this.initTreeData();
     this.$event.on('refresh', () => {
-      console.log('refresh')
+      console.log('refresh');
+      this.rightClickOption = {}
       this.initTreeData()
     })
   }
@@ -464,10 +477,14 @@ export default {
 }
 
 .drager {
-  -webkit-app-region: drag;
-  flex: 1;
   width: 100px;
   user-select: none;
+  display: flex;
+  align-items: center;
+  span {
+    flex: 1;
+    -webkit-app-region: drag;
+  }
 }
 
 .no-data-tree {

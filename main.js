@@ -1,7 +1,9 @@
 // main.js
 
 // electron 模块可以用来控制应用的生命周期和创建原生浏览窗口
-const { app, Menu,globalShortcut , ipcMain, BrowserWindow } = require('electron')
+const { app, Menu,globalShortcut , ipcMain, BrowserWindow, shell } = require('electron')
+
+// shell.openExternal('https://github.com')
 const path = require('path')
 Menu.setApplicationMenu(null);
 const createWindow = () => {
@@ -33,6 +35,9 @@ const createWindow = () => {
   })
   ipcMain.on('unmaximize', () => {
     mainWindow.unmaximize()
+  })
+  ipcMain.on('outerlink', (e, url) => {
+    shell.openExternal(url)
   })
   
   // 打开开发工具

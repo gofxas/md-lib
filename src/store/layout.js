@@ -12,7 +12,7 @@ export default {
   }),
   mutations: {
     setSelectedKeys(state, payload) {
-      state.selectedKeys = payload || [];
+      state.selectedKeys = payload || [1];
     },
     setValue(state, value) {
       state.value = value;

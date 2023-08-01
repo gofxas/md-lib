@@ -103,13 +103,22 @@ export default {
 
 .markdown-body,
 .CodeMirror pre.CodeMirror-line,
-.CodeMirror pre.CodeMirror-line-like {
+.CodeMirror pre.CodeMirror-line-like,
+.bytemd .CodeMirror,
+.bytemd code,
+.bytemd kbd {
   font-family: "Fira Code", "lxgw", PingFang SC, -apple-system,
     BlinkMacSystemFont, Helvetica Neue, Helvetica, sans-serif !important;
 }
 
 .markdown-body {
   padding: 24px;
+}
+
+.markdown-body tt,
+.markdown-body code,
+.markdown-body samp {
+  font-family: "Fira Code", "lxgw", ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace,
 }
 
 .viewer {
@@ -133,5 +142,4 @@ export default {
     border-radius: 3px;
     background-color: transparent;
   }
-}
-</style>
+}</style>
