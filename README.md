@@ -1,7 +1,13 @@
-# Vue 3 + Vite
+# 文笥  
+一款 Markdown 管理工具  
+使用 Vue+Vite+Electron+sqlite开发  
+点击 `左上角图标` 回到根目录文档（本文档）  
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+## 开放源代码使用  
+UI框架使用  [Naiveui](https://github.com/tusen-ai/naive-ui)  
+Markdown编辑器使用 [bytemd](https://github.com/bytedance/bytemd)  
+英文字体 [FiraCode](https://github.com/tonsky/FiraCode)  
+中文字体 [霞鹜文楷](https://github.com/lxgw/LxgwWenKai)  
 
-## Recommended IDE Setup
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+## 开发中...   
