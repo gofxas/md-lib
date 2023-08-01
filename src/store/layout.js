@@ -1,7 +1,7 @@
 export default {
   state: () => ({
     routing: false,
-    selectedKeys: [],
+    selectedKeys: [1],
     value: ``,
     title: "",
     placement: "bottom-right",

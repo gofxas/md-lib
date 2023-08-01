@@ -88,7 +88,7 @@ export default {
       if (window.appContext && window.appContext.electron()) {
         appContext.database.update({
           title: this.title,
-          content: this.content,
+          content: this.value,
         }, { id: this.selectedKeys[0] }).then(res => {
           this.$emit("onEdit", false);
         })

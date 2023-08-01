@@ -211,7 +211,7 @@ export default {
         case 'del':
           const ids = this.flatTree(this.rightClickOption);
           console.log(ids)
-          const confirm = window.confirm('"删除将会把文档和文档子集全部删除，无法恢复。",');
+          const confirm = window.confirm('删除将会把文档和文档子集全部删除，无法恢复。');
 
           if (confirm && window.appContext && window.appContext.electron()) {
             appContext.database.deleteDoc(ids).then(() => {
