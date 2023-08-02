@@ -23,7 +23,8 @@ const createWindow = () => {
   })
   let isDev = process.argv.some(t => t === 'DEV');
   // 加载 index.html
-  isDev?mainWindow.loadURL('http://localhost:5173/'):mainWindow.loadFile('vitebuild/index.html')
+  isDev?mainWindow.loadURL('http://localhost:5173/'):mainWindow.loadFile('vitebuild/index.html');
+  
   ipcMain.on('close', () => {
     mainWindow.close()
   })

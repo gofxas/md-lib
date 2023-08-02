@@ -10,7 +10,7 @@
         <img class="bd-avatar" :src="bd_userinfo.avatar_url">
         <p class="bd-info" v-if="bd_userinfo.baidu_name">百度昵称：{{ bd_userinfo.baidu_name }}</p>
         <p class="bd-info" v-if="bd_userinfo.netdisk_name">网盘昵称：{{ bd_userinfo.netdisk_name }}</p>
-        <p class="bd-info">VIP等级：{{ bd_userinfo.vip_type }}</p>
+        <p class="bd-info">VIP等级：{{ vipLevel(bd_userinfo.vip_type) }}</p>
       </div>
       <n-form>
         <n-form-item v-if="!bd_userinfo?.uk" label="百度云:">
@@ -45,9 +45,8 @@
     <n-modal mask-closable=false :on-after-leave="modalLeave" v-model:show="bdmodal">
       <n-card style="width: 400px" title="百度云授权" :bordered="false" size="huge" role="dialog" aria-modal="true">
         <div class="baidu-code">
-          <template 
-          v-if="!qrcode_url">
-          <n-button @click="getUserQr" strong secondary type="success">点击获取二维码</n-button>
+          <template v-if="!qrcode_url">
+            <n-button @click="getUserQr" strong secondary type="success">点击获取二维码</n-button>
           </template>
           <template v-else>
             <img :src="qrcode_url">
@@ -80,7 +79,7 @@ export default {
       qrcode_url: '',
       qrcode_status: false,// 扫码成功
       device_code: '',
-      timer:null,
+      timer: null,
     };
   },
   computed: {
@@ -88,9 +87,24 @@ export default {
   },
   methods: {
     ...mapMutations('config', ['setState']),
-    ...mapActions('config', ['initConfig',"getUserinfo"]),
+    ...mapActions('config', ['initConfig', "getUserinfo"]),
     returnHome() {
       this.$router.replace("/");
+    },
+    vipLevel(level) {
+      let txt = '';
+      switch (level) {
+        case 1:
+          txt = '普通用户'
+          break;
+        case 2:
+          txt = '普通会员'
+          break;
+        case 3:
+          txt = '超级会员'
+          break;
+      }
+      return txt;
     },
     async verifyPasswd() {
       if (window.appContext && window.appContext.electron()) {
@@ -103,7 +117,15 @@ export default {
     },
     savePasswd() {
       if (this.npasswd != this.npasswd_repeat) {
-        $message.warning("两次输入的密码不一样！")
+        $message.warning("两次输入的密码不一样！");
+        return;
+      };
+      if (window.appContext && window.appContext.electron()) {
+        appContext.database.setPassword(this.npasswd).then(res => {
+          if(res.status) {
+            this.initConfig()
+          }
+        })
       }
     },
 
@@ -166,9 +188,9 @@ scope=basic,netdisk`;
   },
   created() {
     this.initConfig()
-    .then(() => {
-      // this.getUserinfo()
-    })
+      .then(() => {
+        // this.getUserinfo()
+      })
   }
 };
 </script>
@@ -209,6 +231,7 @@ scope=basic,netdisk`;
   justify-content: center;
   flex-direction: column;
 }
+
 :deep(.n-form-item) {
   width: 220px;
 }
@@ -223,11 +246,13 @@ scope=basic,netdisk`;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
   img {
     width: 250px;
     height: 250px;
   }
 }
+
 .bd-disk-info {
   margin-bottom: 12px;
   width: 220px;
@@ -235,14 +260,17 @@ scope=basic,netdisk`;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+
   .bd-avatar {
     width: 80px;
     height: 80px;
     border-radius: 10px;
     margin-bottom: 12px;
+    box-shadow: 0 0 4px 2px #cfcecd;
   }
-  p{
+
+  p {
     width: 100%;
+    color: #b5aa90;
   }
-}
-</style>
+}</style>

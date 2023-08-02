@@ -10,7 +10,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "dev": "nodemon --watch ./src -e js,vue --exec vite build ",
-    "electron": "vite && electron . DEV",
+    "electron": "electron . DEV",
     "builder:win": "electron-builder --windows nsis:x64",
     "builder:linux": "electron-builder --linux deb tar.xz",
     "rebuild": "electron-rebuild -f -w sqlite3",

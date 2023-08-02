@@ -4,11 +4,7 @@ export default {
       bd_access_token: "",
       bd_refresh_token: "",
       bd_userinfo: {
-        baidu_name: "baidu_name",
-        netdisk_name: "netdisk_name",
-        avatar_url: "https://www.naiveui.com/assets/naivelogo-93278402.svg",
-        vip_type: "vip_type",
-        uk: 1,
+
       },
       hasPasswd: false,
       passwd_vertied: false,

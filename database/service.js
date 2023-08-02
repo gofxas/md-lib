@@ -58,14 +58,14 @@ const updateConfig = async (option) => {
   return result;
 };
 
-const setPassword = async (old, newpass) => {
+const setPassword = async (newpass, old) => {
   const result = await Configs.findByPk(1);
   const passwd = result?.dataValues.passwd;
   if (passwd) {
     if (passwd != sha1(old)) {
       return { status: false, msg: "旧密码错误！" };
     } else {
-      await Files.update(
+      await Configs.update(
         { passwd: sha1(newpass) },
         {
           where: { id: 1 },
@@ -74,7 +74,7 @@ const setPassword = async (old, newpass) => {
       return { status: true, msg: "密码设置成功！" };
     }
   } else {
-    await Files.update(
+    await Configs.update(
       { passwd: sha1(newpass) },
       {
         where: { id: 1 },
