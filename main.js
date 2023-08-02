@@ -21,9 +21,9 @@ const createWindow = () => {
       contextIsolation:true,
     }
   })
-
+  let isDev = process.argv.some(t => t === 'DEV');
   // 加载 index.html
-  mainWindow.loadFile('vitebuild/index.html')
+  isDev?mainWindow.loadURL('http://localhost:5173/'):mainWindow.loadFile('vitebuild/index.html')
   ipcMain.on('close', () => {
     mainWindow.close()
   })
@@ -39,7 +39,7 @@ const createWindow = () => {
   ipcMain.on('outerlink', (e, url) => {
     shell.openExternal(url)
   })
-  let isDev = process.argv.some(t => t === 'DEV');
+  
   isDev&& mainWindow.webContents.openDevTools();
 }
 

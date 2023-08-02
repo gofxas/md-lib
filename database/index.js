@@ -6,9 +6,11 @@ const sequelize = new Sequelize({
     storage: path.join(process.cwd(), '/database/database.sqlite'),
     define: {
         freezeTableName: true
-    }
+    },
+    logging:false
 });
 console.log(sequelize,'sequelize--')
+
 const Files = sequelize.define('Files', {
     id: {
         type: DataTypes.INTEGER(11),
@@ -30,10 +32,28 @@ const Files = sequelize.define('Files', {
     }
 });
 
+const Configs = sequelize.define('Configs', {
+    id: {
+        type: DataTypes.INTEGER(11),
+        primaryKey: true,
+        autoIncrement: true,
+    },
+    passwd: {
+        type: DataTypes.STRING,
+    },
+    bd_access_token: {
+        type: DataTypes.TEXT,
+    },
+    bd_refresh_token: {
+        type: DataTypes.TEXT,
+    }
+});
+
 (async () => {
     await sequelize.sync({ alter: true });
 })();
 
 module.exports = {
-    Files
+    Files,
+    Configs
 }

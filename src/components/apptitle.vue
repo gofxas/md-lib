@@ -38,6 +38,8 @@ export default {
 .app-title {
   height: 32px;
   display: flex;
+  z-index: 1;
+  position: relative;
 }
 .app-title-drager {
   flex: 1;

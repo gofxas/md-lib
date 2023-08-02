@@ -1,5 +1,6 @@
-const { Files } = require("./index");
+const { Files, Configs } = require("./index");
 const { Sequelize } = require("sequelize");
+const sha1 = require("sha1");
 const Op = Sequelize.Op;
 const findById = async (id) => {
   const result = await Files.findByPk(id);
@@ -36,10 +37,72 @@ const deleteDoc = async (ids = []) => {
   return result;
 };
 
+const initConfig = async (config = {
+  passwd: "",
+  bd_access_token: "",
+  bd_refresh_token: "",
+}) => {
+  const result = await Configs.create(config);
+  return result;
+};
+
+const getConfig = async () => {
+  const result = await Configs.findByPk(1);
+  return result;
+};
+
+const updateConfig = async (option) => {
+  const result = await Configs.update(option, {
+    where: { id: 1 },
+  });
+  return result;
+};
+
+const setPassword = async (old, newpass) => {
+  const result = await Configs.findByPk(1);
+  const passwd = result?.dataValues.passwd;
+  if (passwd) {
+    if (passwd != sha1(old)) {
+      return { status: false, msg: "旧密码错误！" };
+    } else {
+      await Files.update(
+        { passwd: sha1(newpass) },
+        {
+          where: { id: 1 },
+        }
+      );
+      return { status: true, msg: "密码设置成功！" };
+    }
+  } else {
+    await Files.update(
+      { passwd: sha1(newpass) },
+      {
+        where: { id: 1 },
+      }
+    );
+    return { status: true, msg: "密码设置成功！" };
+  }
+};
+
+const verifyPassword = async (pass) => {
+  const result = await Configs.findByPk(1);
+  const passwd = result?.dataValues.passwd;
+  if (passwd != sha1(pass)) {
+    return false;
+  } else {
+    return true;
+  }
+};
+
 module.exports = {
   findById,
   findAndCountAll,
   create,
   update,
   deleteDoc,
+  getConfig,
+  setPassword,
+  verifyPassword,
+  updateConfig,
+  initConfig,
 };
