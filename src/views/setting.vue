@@ -8,9 +8,9 @@
     <div class="app-setting-right">
       <div class="bd-disk-info" v-if="bd_userinfo?.uk">
         <img class="bd-avatar" :src="bd_userinfo.avatar_url">
-        <p>百度名称：{{ bd_userinfo.baidu_name }}</p>
-        <p>网盘名称：{{ bd_userinfo.netdisk_name }}</p>
-        <p>VIP等级：{{ bd_userinfo.vip_type }}</p>
+        <p class="bd-info" v-if="bd_userinfo.baidu_name">百度昵称：{{ bd_userinfo.baidu_name }}</p>
+        <p class="bd-info" v-if="bd_userinfo.netdisk_name">网盘昵称：{{ bd_userinfo.netdisk_name }}</p>
+        <p class="bd-info">VIP等级：{{ bd_userinfo.vip_type }}</p>
       </div>
       <n-form>
         <n-form-item v-if="!bd_userinfo?.uk" label="百度云:">
