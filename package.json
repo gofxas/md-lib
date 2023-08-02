@@ -66,6 +66,7 @@
   "build": {
     "icon": "./icon.png",
     "asar": true,
+    "compression":"normal",
     "nsis": {
       "oneClick": false,
       "perMachine": false,

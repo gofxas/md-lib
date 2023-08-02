@@ -1,6 +1,8 @@
 <template>
-  <div class="app-sider">
-    <div class="app-sider-head">
+  <div :class="['app-sider',expand?'':'app-sider-mini']"
+  >
+    <template v-if="expand">
+      <div  class="app-sider-head">
       <n-space align="center" justify="space-between">
         <h2 class="drager">
           <n-icon
@@ -20,10 +22,13 @@
             </svg></n-icon>
           <span>文笥</span>
         </h2>
-        <n-button @click="handleRootDoc" quaternary circle><n-icon size="18"><svg xmlns="http://www.w3.org/2000/svg"
+        <n-space>
+          <n-button @click="handleRootDoc" quaternary circle><n-icon size="18"><svg xmlns="http://www.w3.org/2000/svg"
               xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24">
               <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" fill="currentColor"></path>
             </svg></n-icon></n-button>
+            <n-button @click="setting" quaternary circle><n-icon size="18"><Settings20Filled /></n-icon></n-button>
+        </n-space>
       </n-space>
       <n-input :disabled="data.length === 0" :title="data.length === 0 ? '请先添加文档' : ''" style="margin-top: 20px"
         placeholder="搜索">
@@ -63,6 +68,8 @@
         </n-button>
       </div>
     </template>
+    </template>
+    <!-- <n-icon class="arrow-side" size="24" @click="expand = !expand"><ChevronRight16Regular/></n-icon> -->
   </div>
   <n-modal v-model:show="showModal">
     <n-card style="width: 600px" title="添加文档" :bordered="false" size="huge" role="dialog" aria-modal="true">
@@ -81,7 +88,7 @@
 <script>
 import { NDropdown, NAlert, NModal, NCard, NTree, NSpace, NButton, NIcon, NInput } from "naive-ui";
 import { h } from "vue";
-import { ChevronRight16Regular, StarEmphasis24Regular, Folder20Regular, FolderOpen20Regular, LockClosed16Regular, LockOpen16Regular } from '@vicons/fluent'
+import { ChevronRight16Regular,Settings20Filled, StarEmphasis24Regular, Folder20Regular, FolderOpen20Regular, LockClosed16Regular, LockOpen16Regular } from '@vicons/fluent'
 import TreeItem from '@/components/treeitem';
 import DropdownItem from '@/components/dropdownitem';
 import { mapState, mapMutations } from 'vuex'
@@ -96,7 +103,9 @@ export default {
     NButton,
     NIcon,
     NInput,
+    ChevronRight16Regular,
     StarEmphasis24Regular,
+    Settings20Filled,
     TreeItem,
     NDropdown
   },
@@ -108,6 +117,7 @@ export default {
   },
   data() {
     return {
+      expand: true,
       // 下拉菜单条目
       options: [
         { label: () => h(DropdownItem, { label: "查看", type: "primary" }), key: 'view', },
@@ -441,6 +451,9 @@ export default {
       };
       loop(obj)
       return ids;
+    },
+    setting() {
+      this.$router.replace('/setting')
     }
   },
   created() {
@@ -459,7 +472,23 @@ export default {
   padding: 12px;
   height: 100%;
   position: relative;
-
+  transition: .3s;
+  &.app-sider-mini{
+    width: 0;
+    padding: 12px 0;
+    .arrow-side {
+      transform: rotate(0deg);
+      right:-24px;
+    }
+  }
+  .arrow-side {
+    position: absolute;
+    right:0px;
+    bottom:200px;
+    transform: rotate(180deg);
+    cursor: pointer;
+    z-index: 1;
+  }
   &::after {
     width: 1px;
     height: 100%;

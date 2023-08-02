@@ -99,10 +99,12 @@ export default {
   font-family: "Fira Code", PingFang SC, -apple-system, BlinkMacSystemFont,
     Helvetica Neue, Helvetica, sans-serif !important;
   border: none;
-  background-color: transparent;
+  background-image: url(/bg.png);
+  background-color: #fcfaf2;
 }
 .bytemd-toolbar {
-  background-color: transparent;
+  background-image: url(/bg.png);
+  background-color: #fcfaf2;
 }
 .markdown-body,
 .CodeMirror pre.CodeMirror-line,
@@ -116,13 +118,16 @@ export default {
 
 .markdown-body {
   padding: 24px;
-  background-color: transparent;
+  background-image: url(/bg.png);
+  background-color: #fcfaf2;
 }
 .CodeMirror  {
-  background-color: transparent;
+  background-image: url(/bg.png);
+  background-color: #fcfaf2;
 }
 .CodeMirror-scroll {
-  background-color: transparent;
+  background-image: url(/bg.png);
+  background-color: #fcfaf2;
 }
 .markdown-body tt,
 .markdown-body code,
