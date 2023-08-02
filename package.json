@@ -10,7 +10,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "dev": "nodemon --watch ./src -e js,vue --exec vite build ",
-    "start": "electron-forge start",
+    "electron":"electron . DEV",
+    "start": "electron-forge start DEV",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "builder:win": "electron-builder --windows nsis:x64",
@@ -63,7 +64,7 @@
     "vite": "^4.4.5"
   },
   "build": {
-    "icon": "./icon.ico",
+    "icon": "./icon.png",
     "asar": true,
     "nsis": {
       "oneClick": false,
@@ -76,7 +77,7 @@
     },
     "win": {
       "artifactName": "${productName}_${version}.${ext}",
-      "icon": "./icon.ico",
+      "icon": "./icon.png",
       "target": [
         {
           "target": "nsis",

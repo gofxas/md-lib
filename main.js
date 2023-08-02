@@ -39,9 +39,8 @@ const createWindow = () => {
   ipcMain.on('outerlink', (e, url) => {
     shell.openExternal(url)
   })
-  
-  // 打开开发工具
-  // mainWindow.webContents.openDevTools();
+  let isDev = process.argv.some(t => t === 'DEV');
+  isDev&& mainWindow.webContents.openDevTools();
 }
 
 // 这段程序将会在 Electron 结束初始化
