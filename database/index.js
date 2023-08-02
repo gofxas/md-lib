@@ -25,8 +25,8 @@ const Files = sequelize.define('Files', {
     content: {
         type: DataTypes.TEXT,
     },
-    passwd: {
-        type: DataTypes.STRING(40),
+    locked: {
+        type: DataTypes.BOOLEAN,
     }
 });
 

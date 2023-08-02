@@ -91,9 +91,11 @@ export default {
           content: this.value,
         }, { id: this.selectedKeys[0] }).then(res => {
           this.$emit("onEdit", false);
+          this.$event.emit('refresh')
         })
       } else {
         this.$emit("onEdit", false);
+        this.$event.emit('refresh')
       }
     },
     cancelHandler() {

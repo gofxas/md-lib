@@ -9,7 +9,7 @@ const findById = async (id) => {
 const findAndCountAll = async (query) => {
   const result = await Files.findAndCountAll({
     where: query,
-    attributes: ["id", "pid", "title", "passwd", "createdAt", "updatedAt"],
+    attributes: ["id", "pid", "title", "locked", "createdAt", "updatedAt"],
   });
   result.rows = result.rows.map((t) => t.dataValues);
   return result;

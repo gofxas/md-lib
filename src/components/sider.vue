@@ -294,7 +294,7 @@ export default {
             "id": 2,
             "pid": 1,
             "title": "我的文档0",
-            "passwd": null,
+            "locked": null,
             isLeaf: false,
             prefix: () => h(NIcon, null, {
               default: () => h(Folder20Regular)
@@ -306,7 +306,7 @@ export default {
             "id": 3,
             "pid": 1,
             "title": "我的文档1",
-            "passwd": null,
+            "locked": null,
             isLeaf: false,
             prefix: () => h(NIcon, null, {
               default: () => h(Folder20Regular)
@@ -318,7 +318,7 @@ export default {
             "id": 4,
             "pid": 1,
             "title": "我的文档2",
-            "passwd": null,
+            "locked": null,
             isLeaf: false,
             prefix: () => h(NIcon, null, {
               default: () => h(Folder20Regular)
@@ -330,7 +330,7 @@ export default {
             "id": 5,
             "pid": 1,
             "title": "我的文档3",
-            "passwd": null,
+            "locked": null,
             isLeaf: false,
             prefix: () => h(NIcon, null, {
               default: () => h(Folder20Regular)
@@ -342,7 +342,7 @@ export default {
             "id": 6,
             "pid": 1,
             "title": "我的文档4",
-            "passwd": null,
+            "locked": null,
             isLeaf: false,
             prefix: () => h(NIcon, null, {
               default: () => h(Folder20Regular)
@@ -354,7 +354,7 @@ export default {
             "id": 7,
             "pid": 1,
             "title": "我的文档5",
-            "passwd": null,
+            "locked": null,
             isLeaf: false,
             prefix: () => h(NIcon, null, {
               default: () => h(Folder20Regular)
@@ -366,7 +366,7 @@ export default {
             "id": 8,
             "pid": 1,
             "title": "我的文档6",
-            "passwd": null,
+            "locked": null,
             isLeaf: false,
             prefix: () => h(NIcon, null, {
               default: () => h(Folder20Regular)
@@ -378,7 +378,7 @@ export default {
             "id": 9,
             "pid": 1,
             "title": "我的文档7",
-            "passwd": null,
+            "locked": null,
             isLeaf: false,
             prefix: () => h(NIcon, null, {
               default: () => h(Folder20Regular)
@@ -390,7 +390,7 @@ export default {
             "id": 10,
             "pid": 1,
             "title": "我的文档8",
-            "passwd": null,
+            "locked": null,
             isLeaf: false,
             prefix: () => h(NIcon, null, {
               default: () => h(Folder20Regular)
@@ -402,7 +402,7 @@ export default {
             "id": 11,
             "pid": 1,
             "title": "我的文档9",
-            "passwd": null,
+            "locked": null,
             isLeaf: false,
             prefix: () => h(NIcon, null, {
               default: () => h(Folder20Regular)
@@ -421,7 +421,7 @@ export default {
           .prefix = () => h(NIcon, null, {
             default: () => h(Folder20Regular)
           }),
-        v.suffix = () => h(NIcon, null, { default: () => v.passwd ? h(LockClosed16Regular) : '' }),
+        v.suffix = () => h(NIcon, null, { default: () => v.locked ? h(LockClosed16Regular) : '' }),
         v.children = [], res), {})
       for (const item of list) {
         if (item.pid === 1) {

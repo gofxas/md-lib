@@ -44,3 +44,6 @@ a {
 .n-input {
   background-color: transparent;
 }
+.n-input.n-input--disabled {
+  background-color: transparent;
+}
