@@ -110,7 +110,6 @@ export default {
       if (window.appContext && window.appContext.electron()) {
         const res = await appContext.database.verifyPassword(this.passwd);
         this.setState(['passwd_vertied', res])
-        console.log(res)
         if (!res) {
           $message.warning('密码不正确！')
         }

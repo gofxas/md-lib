@@ -46,9 +46,10 @@ const createWindow = () => {
   ipcMain.on("outerlink", (e, url) => {
     shell.openExternal(url);
   });
-  isDev
-    ? mainWindow.loadURL("http://localhost:5173/")
-    : mainWindow.loadFile("vitebuild/index.html");
+  // isDev
+  //   ? mainWindow.loadURL("http://localhost:5173/")
+  //   : 
+    mainWindow.loadFile("vitebuild/index.html");
   isDev && mainWindow.webContents.openDevTools();
 };
 

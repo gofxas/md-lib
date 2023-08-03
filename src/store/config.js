@@ -3,11 +3,10 @@ export default {
     return {
       bd_access_token: "",
       bd_refresh_token: "",
-      bd_userinfo: {
-
-      },
+      bd_userinfo: {},
       hasPasswd: false,
       passwd_vertied: false,
+      user_lock_passwd:"",
     };
   },
   mutations: {

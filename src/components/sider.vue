@@ -83,12 +83,13 @@
     </n-card>
   </n-modal>
   <n-dropdown size="small" placement="bottom-start" trigger="manual" :x="dropdownOpt.x" :y="dropdownOpt.y"
-    :options="options" :show="dropdownOpt.show" :on-clickoutside="onClickoutside" @select="handleDropdownSelect" />
+    :options="computedContextMenu" :show="dropdownOpt.show" :on-clickoutside="onClickoutside"
+    @select="handleDropdownSelect" />
 </template>
 <script>
 import { NDropdown, NAlert, NModal, NCard, NTree, NSpace, NButton, NIcon, NInput } from "naive-ui";
 import { h } from "vue";
-import { ChevronRight16Regular, Settings20Filled, StarEmphasis24Regular, Folder20Regular, FolderOpen20Regular, LockClosed16Regular, LockOpen16Regular } from '@vicons/fluent'
+import { ChevronRight16Regular, DocumentBulletList20Regular, Settings20Filled, StarEmphasis24Regular, Folder20Regular, FolderOpen20Regular, LockClosed16Regular, LockOpen16Regular } from '@vicons/fluent'
 import TreeItem from '@/components/treeitem';
 import DropdownItem from '@/components/dropdownitem';
 import { mapState, mapMutations } from 'vuex'
@@ -134,7 +135,6 @@ export default {
       rightClickOption: {},
       // 菜单数据
       data: [],
-
       showModal: false,
       docname: '新的文档',
       renderLabel: ({ option }) => h(TreeItem, {
@@ -163,7 +163,11 @@ export default {
     };
   },
   computed: {
-    ...mapState('layout', ['selectedKeys'])
+    ...mapState('layout', ['selectedKeys']),
+    ...mapState('config', ['user_lock_passwd']),
+    computedContextMenu() {
+      return this.options;
+    }
   },
   methods: {
     ...mapMutations('layout', ['setSelectedKeys', 'setPlacement']),
@@ -269,8 +273,12 @@ export default {
     },
     selectedHandler(keys, option, meta) {
       if (meta.action === 'select' && !this.isEdit) {
-        this.selectedKeys = this.setSelectedKeys(keys);
         this.rightClickOption = option[0];
+        if (this.rightClickOption.locked && !this.user_lock_passwd) {
+          this.$event.emit('verify')
+          return;
+        }
+        this.selectedKeys = this.setSelectedKeys(keys);
       }
       // 编辑状态？
       if (this.isEdit) {
@@ -289,17 +297,13 @@ export default {
           .findAndCountAll({})
           .then((res) => {
             const list = res.rows.map(item => ({
-              ...item,
-              prefix: () => h(NIcon, null, {
-                default: () => h(Folder20Regular)
-              })
+              ...item
             }))
             const treeList = this.convert(list);
-            console.log(treeList)
             this.data = treeList;
           });
       } else {
-        this.data = [
+        this.data = this.convert([
           {
             "id": 2,
             "pid": 1,
@@ -316,7 +320,7 @@ export default {
             "id": 3,
             "pid": 1,
             "title": "我的文档1",
-            "locked": null,
+            "locked": true,
             isLeaf: false,
             prefix: () => h(NIcon, null, {
               default: () => h(Folder20Regular)
@@ -326,7 +330,7 @@ export default {
           },
           {
             "id": 4,
-            "pid": 1,
+            "pid": 2,
             "title": "我的文档2",
             "locked": null,
             isLeaf: false,
@@ -338,7 +342,7 @@ export default {
           },
           {
             "id": 5,
-            "pid": 1,
+            "pid": 2,
             "title": "我的文档3",
             "locked": null,
             isLeaf: false,
@@ -350,7 +354,7 @@ export default {
           },
           {
             "id": 6,
-            "pid": 1,
+            "pid": 2,
             "title": "我的文档4",
             "locked": null,
             isLeaf: false,
@@ -362,7 +366,7 @@ export default {
           },
           {
             "id": 7,
-            "pid": 1,
+            "pid": 4,
             "title": "我的文档5",
             "locked": null,
             isLeaf: false,
@@ -374,7 +378,7 @@ export default {
           },
           {
             "id": 8,
-            "pid": 1,
+            "pid": 4,
             "title": "我的文档6",
             "locked": null,
             isLeaf: false,
@@ -386,7 +390,7 @@ export default {
           },
           {
             "id": 9,
-            "pid": 1,
+            "pid": 4,
             "title": "我的文档7",
             "locked": null,
             isLeaf: false,
@@ -398,7 +402,7 @@ export default {
           },
           {
             "id": 10,
-            "pid": 1,
+            "pid": 4,
             "title": "我的文档8",
             "locked": null,
             isLeaf: false,
@@ -410,7 +414,7 @@ export default {
           },
           {
             "id": 11,
-            "pid": 1,
+            "pid": 4,
             "title": "我的文档9",
             "locked": null,
             isLeaf: false,
@@ -420,7 +424,7 @@ export default {
             "createdAt": "2023-07-31T07:46:14.288Z",
             "updatedAt": "2023-07-31T07:46:14.288Z"
           }
-        ]
+        ])
       }
     },
     // 转化数组成 tree 结构
@@ -429,10 +433,11 @@ export default {
       const map = list.reduce((res, v) => (
         res[v.id] = v, v
           .prefix = () => h(NIcon, null, {
-            default: () => h(Folder20Regular)
+            default: () => h(DocumentBulletList20Regular)
           }),
         v.suffix = () => h(NIcon, null, { default: () => v.locked ? h(LockClosed16Regular) : '' }),
-        v.children = [], res), {})
+        v.isLeaf = true,
+        res), {})
       for (const item of list) {
         if (item.pid === 1) {
           res.push(item);
@@ -441,9 +446,11 @@ export default {
         if (item.pid in map) {
           const parent = map[item.pid]
           parent.children = parent.children || [];
-          parent.children.push(item)
-        } else {
-          item.isLeaf = true
+          parent.children.push(item);
+          parent.isLeaf = false;
+          parent.prefix = () => h(NIcon, null, {
+            default: () => h(Folder20Regular)
+          })
         }
       }
       return res;
@@ -453,7 +460,7 @@ export default {
       const ids = [];
       const loop = (obj) => {
         if (obj.id) { ids.push(obj.id) };
-        if (obj.children && obj.children.length) {
+        if (obj?.children && obj.children.length) {
           for (let i = 0; i < obj.children.length; i++) {
             loop(obj.children[i])
           }
@@ -484,6 +491,7 @@ export default {
   position: relative;
   transition: .3s;
   user-select: none;
+
   &.app-sider-mini {
     width: 0;
     padding: 12px 0;
@@ -547,4 +555,5 @@ export default {
   .n-tree-node {
     align-items: center;
   }
-}</style>
+}
+</style>
