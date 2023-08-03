@@ -1,73 +1,73 @@
 <template>
-  <div :class="['app-sider',expand?'':'app-sider-mini']"
-  >
+  <div :class="['app-sider', expand ? '' : 'app-sider-mini']">
     <template v-if="expand">
-      <div  class="app-sider-head">
-      <n-space align="center" justify="space-between">
-        <h2 class="drager">
-          <n-icon
-          @click="homeMD"
-          size="20"
-          style="margin-right: 12px;cursor: pointer;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 113.49 100">
-              <g>
+      <div class="app-sider-head">
+        <n-space align="center" justify="space-between">
+          <h2 class="drager">
+            <n-icon @click="homeMD" size="20" style="margin-right: 12px;cursor: pointer;"><svg
+                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 113.49 100">
                 <g>
-                  <path fill="#02035e"
-                    d="M84.94 62.54l-28.2-12.38-28.19 12.38L0 75.08 56.74 100l56.74-24.92-28.54-12.54z" />
-                  <path fill="#00b0d8" opacity=".8"
-                    d="M84.94 37.46l-28.2-12.38-28.19 12.38L0 50l28.55 12.54 28.19 12.38 28.2-12.38L113.48 50 84.94 37.46z" />
-                  <path fill="#00b0d8" opacity=".5"
-                    d="M56.74 0L0 24.92l28.55 12.54 28.19 12.38 28.2-12.38 28.54-12.54L56.74 0z" />
+                  <g>
+                    <path fill="#02035e"
+                      d="M84.94 62.54l-28.2-12.38-28.19 12.38L0 75.08 56.74 100l56.74-24.92-28.54-12.54z" />
+                    <path fill="#00b0d8" opacity=".8"
+                      d="M84.94 37.46l-28.2-12.38-28.19 12.38L0 50l28.55 12.54 28.19 12.38 28.2-12.38L113.48 50 84.94 37.46z" />
+                    <path fill="#00b0d8" opacity=".5"
+                      d="M56.74 0L0 24.92l28.55 12.54 28.19 12.38 28.2-12.38 28.54-12.54L56.74 0z" />
+                  </g>
                 </g>
-              </g>
-            </svg></n-icon>
-          <span>文笥</span>
-        </h2>
-        <n-space>
-          <n-button @click="handleRootDoc" quaternary circle><n-icon size="18"><svg xmlns="http://www.w3.org/2000/svg"
-              xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24">
-              <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" fill="currentColor"></path>
-            </svg></n-icon></n-button>
-            <n-button @click="setting" quaternary circle><n-icon size="18"><Settings20Filled /></n-icon></n-button>
+              </svg></n-icon>
+            <span>文笥</span>
+          </h2>
+          <n-space>
+            <n-button @click="handleRootDoc" quaternary circle><n-icon size="18"><svg xmlns="http://www.w3.org/2000/svg"
+                  xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24">
+                  <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" fill="currentColor"></path>
+                </svg></n-icon></n-button>
+            <n-button @click="setting" quaternary circle><n-icon size="18">
+                <Settings20Filled />
+              </n-icon></n-button>
+          </n-space>
         </n-space>
-      </n-space>
-      <n-input :disabled="data.length === 0" :title="data.length === 0 ? '请先添加文档' : ''" style="margin-top: 20px"
-        placeholder="搜索">
-        <template #suffix>
-          <n-icon>
-            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24">
-              <g fill="none">
-                <path
-                  d="M4 6c0-.69.315-1.293.774-1.78c.455-.482 1.079-.883 1.793-1.202C7.996 2.377 9.917 2 12 2c2.083 0 4.004.377 5.433 1.018c.714.32 1.338.72 1.793 1.202c.459.487.774 1.09.774 1.78v6.257a5.496 5.496 0 0 0-1.5-.882V8.392c-.32.22-.68.417-1.067.59C16.004 9.623 14.083 10 12 10c-2.083 0-4.004-.377-5.433-1.018a6.801 6.801 0 0 1-1.067-.59V18c0 .207.09.46.365.75c.279.296.717.596 1.315.864c1.195.535 2.899.886 4.82.886c.24 0 .476-.006.708-.016a5.495 5.495 0 0 0 2.15 1.267c-.89.162-1.856.249-2.858.249c-2.083 0-4.004-.377-5.433-1.017c-.714-.32-1.338-.72-1.793-1.203C4.315 19.293 4 18.69 4 18V6zm1.5 0c0 .207.09.46.365.75c.279.296.717.596 1.315.864c1.195.535 2.899.886 4.82.886c1.921 0 3.625-.35 4.82-.886c.598-.268 1.036-.568 1.315-.864c.275-.29.365-.543.365-.75c0-.207-.09-.46-.365-.75c-.279-.296-.717-.596-1.315-.864C15.625 3.851 13.92 3.5 12 3.5c-1.921 0-3.625.35-4.82.886c-.598.268-1.036.568-1.315.864c-.275.29-.365.543-.365.75zm11 15a4.48 4.48 0 0 0 2.607-.832l2.613 2.612a.75.75 0 1 0 1.06-1.06l-2.612-2.613A4.5 4.5 0 1 0 16.5 21zm0-1.5a3 3 0 1 1 0-6a3 3 0 0 1 0 6z"
-                  fill="currentColor"></path>
-              </g>
-            </svg>
-          </n-icon>
-        </template>
-      </n-input>
-    </div>
-    <!--  -->
-    <template v-if="data.length">
-      <n-tree ref="treeInstRef" virtual-scroll block-line :data="data" key-field="id" label-field="title"
-        :default-selected-keys="selectedKeys" :selected-keys="selectedKeys" :cancelable="false" :expand-on-click="true"
-        :render-label="renderLabel" :render-switcher-icon="renderSwitcherIcon" :on-update:selected-keys="selectedHandler"
-        :on-update:expanded-keys="updatePrefixWithExpaned" style="height: calc(100% - 100px)" />
-    </template>
-    <template v-else>
-      <div class="no-data-tree" style="height: calc(100% - 100px)">
-        <n-icon size="24" color="#b5aa90">
-          <StarEmphasis24Regular />
-        </n-icon>
-        <p style="color:#b5aa90">请先添加文档</p>
-        <n-button @click="handleRootDoc" style="width: 100%;margin-top: 24px;">
-          <n-icon size="18">
-            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24">
-              <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" fill="currentColor"></path>
-            </svg>
-          </n-icon>
-          立即创建
-        </n-button>
+        <n-input :disabled="data.length === 0" :title="data.length === 0 ? '请先添加文档' : ''" style="margin-top: 20px"
+          placeholder="搜索">
+          <template #suffix>
+            <n-icon>
+              <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24">
+                <g fill="none">
+                  <path
+                    d="M4 6c0-.69.315-1.293.774-1.78c.455-.482 1.079-.883 1.793-1.202C7.996 2.377 9.917 2 12 2c2.083 0 4.004.377 5.433 1.018c.714.32 1.338.72 1.793 1.202c.459.487.774 1.09.774 1.78v6.257a5.496 5.496 0 0 0-1.5-.882V8.392c-.32.22-.68.417-1.067.59C16.004 9.623 14.083 10 12 10c-2.083 0-4.004-.377-5.433-1.018a6.801 6.801 0 0 1-1.067-.59V18c0 .207.09.46.365.75c.279.296.717.596 1.315.864c1.195.535 2.899.886 4.82.886c.24 0 .476-.006.708-.016a5.495 5.495 0 0 0 2.15 1.267c-.89.162-1.856.249-2.858.249c-2.083 0-4.004-.377-5.433-1.017c-.714-.32-1.338-.72-1.793-1.203C4.315 19.293 4 18.69 4 18V6zm1.5 0c0 .207.09.46.365.75c.279.296.717.596 1.315.864c1.195.535 2.899.886 4.82.886c1.921 0 3.625-.35 4.82-.886c.598-.268 1.036-.568 1.315-.864c.275-.29.365-.543.365-.75c0-.207-.09-.46-.365-.75c-.279-.296-.717-.596-1.315-.864C15.625 3.851 13.92 3.5 12 3.5c-1.921 0-3.625.35-4.82.886c-.598.268-1.036.568-1.315.864c-.275.29-.365.543-.365.75zm11 15a4.48 4.48 0 0 0 2.607-.832l2.613 2.612a.75.75 0 1 0 1.06-1.06l-2.612-2.613A4.5 4.5 0 1 0 16.5 21zm0-1.5a3 3 0 1 1 0-6a3 3 0 0 1 0 6z"
+                    fill="currentColor"></path>
+                </g>
+              </svg>
+            </n-icon>
+          </template>
+        </n-input>
       </div>
-    </template>
+      <!--  -->
+      <template v-if="data.length">
+        <n-tree ref="treeInstRef" virtual-scroll block-line :data="data" key-field="id" label-field="title"
+          :default-selected-keys="selectedKeys" :selected-keys="selectedKeys" :cancelable="false" :expand-on-click="true"
+          :render-label="renderLabel" :render-switcher-icon="renderSwitcherIcon"
+          :on-update:selected-keys="selectedHandler" :on-update:expanded-keys="updatePrefixWithExpaned"
+          style="height: calc(100% - 100px)" />
+      </template>
+      <template v-else>
+        <div class="no-data-tree" style="height: calc(100% - 100px)">
+          <n-icon size="24" color="#b5aa90">
+            <StarEmphasis24Regular />
+          </n-icon>
+          <p style="color:#b5aa90">请先添加文档</p>
+          <n-button @click="handleRootDoc" style="width: 100%;margin-top: 24px;">
+            <n-icon size="18">
+              <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24">
+                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" fill="currentColor"></path>
+              </svg>
+            </n-icon>
+            立即创建
+          </n-button>
+        </div>
+      </template>
     </template>
     <!-- <n-icon class="arrow-side" size="24" @click="expand = !expand"><ChevronRight16Regular/></n-icon> -->
   </div>
@@ -88,7 +88,7 @@
 <script>
 import { NDropdown, NAlert, NModal, NCard, NTree, NSpace, NButton, NIcon, NInput } from "naive-ui";
 import { h } from "vue";
-import { ChevronRight16Regular,Settings20Filled, StarEmphasis24Regular, Folder20Regular, FolderOpen20Regular, LockClosed16Regular, LockOpen16Regular } from '@vicons/fluent'
+import { ChevronRight16Regular, Settings20Filled, StarEmphasis24Regular, Folder20Regular, FolderOpen20Regular, LockClosed16Regular, LockOpen16Regular } from '@vicons/fluent'
 import TreeItem from '@/components/treeitem';
 import DropdownItem from '@/components/dropdownitem';
 import { mapState, mapMutations } from 'vuex'
@@ -168,6 +168,15 @@ export default {
   methods: {
     ...mapMutations('layout', ['setSelectedKeys', 'setPlacement']),
     homeMD() {
+      if (this.isEdit) {
+        window.$message.info(
+          "文档正在编辑 并未保存！",
+          {
+            keepAliveOnHover: true
+          }
+        )
+        return;
+      }
       this.setSelectedKeys([1]);
       this.rightClickOption = {};
     },
@@ -473,22 +482,26 @@ export default {
   height: 100%;
   position: relative;
   transition: .3s;
-  &.app-sider-mini{
+  user-select: none;
+  &.app-sider-mini {
     width: 0;
     padding: 12px 0;
+
     .arrow-side {
       transform: rotate(0deg);
-      right:-24px;
+      right: -24px;
     }
   }
+
   .arrow-side {
     position: absolute;
-    right:0px;
-    bottom:200px;
+    right: 0px;
+    bottom: 200px;
     transform: rotate(180deg);
     cursor: pointer;
     z-index: 1;
   }
+
   &::after {
     width: 1px;
     height: 100%;
@@ -510,6 +523,7 @@ export default {
   user-select: none;
   display: flex;
   align-items: center;
+
   span {
     flex: 1;
     -webkit-app-region: drag;
@@ -521,6 +535,7 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  user-select: none;
 }
 
 :deep(.n-tree) {
@@ -531,5 +546,4 @@ export default {
   .n-tree-node {
     align-items: center;
   }
-}
-</style>
+}</style>

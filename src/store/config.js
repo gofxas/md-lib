@@ -26,6 +26,7 @@ export default {
             config_init.dataValues;
           if (passwd) {
             commit("setState", ["hasPasswd", true]);
+            commit("setState", ["passwd_vertied", false]);
           } else {
             commit("setState", ["passwd_vertied", true]);
           }
@@ -36,6 +37,7 @@ export default {
             config.dataValues;
           if (passwd) {
             commit("setState", ["hasPasswd", true]);
+            commit("setState", ["passwd_vertied", false]);
           } else {
             commit("setState", ["passwd_vertied", true]);
           }

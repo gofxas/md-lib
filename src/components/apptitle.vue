@@ -40,6 +40,7 @@ export default {
   display: flex;
   z-index: 1;
   position: relative;
+  user-select: none;
 }
 .app-title-drager {
   flex: 1;

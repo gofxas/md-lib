@@ -94,22 +94,23 @@ export default {
     vipLevel(level) {
       let txt = '';
       switch (level) {
-        case 1:
+        case 0:
           txt = '普通用户'
           break;
-        case 2:
+        case 1:
           txt = '普通会员'
           break;
-        case 3:
+        case 2:
           txt = '超级会员'
           break;
       }
       return txt;
     },
-    async verifyPasswd() {
+    async verifyPassword() {
       if (window.appContext && window.appContext.electron()) {
         const res = await appContext.database.verifyPassword(this.passwd);
         this.setState(['passwd_vertied', res])
+        console.log(res)
         if (!res) {
           $message.warning('密码不正确！')
         }
@@ -120,9 +121,13 @@ export default {
         $message.warning("两次输入的密码不一样！");
         return;
       };
+      if (!this.npasswd && !this.npasswd.trim()) {
+        $message.warning("新密码不能为空！");
+        return;
+      }
       if (window.appContext && window.appContext.electron()) {
-        appContext.database.setPassword(this.npasswd).then(res => {
-          if(res.status) {
+        appContext.database.setPassword(this.npasswd, this.passwd).then(res => {
+          if (res.status) {
             this.initConfig()
           }
         })
@@ -233,12 +238,14 @@ scope=basic,netdisk`;
 }
 
 :deep(.n-form-item) {
-  width: 220px;
+  // width: 220px;
 }
 
 :deep(.n-form-item-label__text) {
   font-weight: bold;
 }
+
+
 
 .baidu-code {
   height: 300px;
@@ -273,4 +280,5 @@ scope=basic,netdisk`;
     width: 100%;
     color: #b5aa90;
   }
-}</style>
+}
+</style>
