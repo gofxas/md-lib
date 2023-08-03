@@ -38,7 +38,7 @@ export default {
 .app-title {
   height: 32px;
   display: flex;
-  z-index: 1;
+  // z-index: 1;
   position: relative;
   user-select: none;
 }

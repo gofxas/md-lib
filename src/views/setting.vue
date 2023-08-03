@@ -1,5 +1,5 @@
 <template>
-  <Apptitle></Apptitle>
+  <Apptitle style="zIndex:1"></Apptitle>
   <div class="app-setting">
     <div class="app-setting-left">
       <img class="app-setting-logo" src="/logo.svg" />
