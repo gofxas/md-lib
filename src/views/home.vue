@@ -10,7 +10,7 @@
     </div>
   </div>
   <n-modal v-model:show="passwdModal">
-    <VerifyPassword/>
+    <VerifyPassword />
   </n-modal>
 </template>
 <script>
@@ -19,8 +19,31 @@ import Tools from "@/components/tools.vue";
 import AppTitle from "@/components/apptitle.vue";
 import Sider from "@/components/sider.vue";
 import VerifyPassword from '@/components/verifyPasswd';
-import { mapMutations } from 'vuex';
-import { NModal } from 'naive-ui';
+import { mapMutations, mapState } from 'vuex';
+import { NModal, NAlert } from 'naive-ui';
+import { h } from 'vue';
+
+const renderMessage = (props) => {
+  const { type } = props
+  return h(
+    NAlert,
+    {
+      closable: props.closable,
+      onClose: props.onClose,
+      type: type === 'loading' ? 'default' : type,
+      title: '加密保护已启用',
+      style: {
+        boxShadow: 'var(--n-box-shadow)',
+        maxWidth: 'calc(100vw - 32px)',
+        width: '480px'
+      }
+    },
+    {
+      default: () => props.content
+    }
+  )
+}
+
 export default {
   name: "home",
   components: { Editor, Tools, Sider, AppTitle, VerifyPassword, NModal },
@@ -28,11 +51,14 @@ export default {
     return {
       isEdit: false,
       passwdModal: false,
-      keys:[],
+      keys: [],
     };
   },
+  computed: {
+    ...mapState('layout', ['notifed'])
+  },
   methods: {
-    ...mapMutations('layout', ['setBackup']),
+    ...mapMutations('layout', ['setBackup', 'setPlacement', 'setNotifed']),
     editHandler(e) {
       if (e) {
         this.setBackup()
@@ -41,9 +67,22 @@ export default {
     },
   },
   created() {
-    this.$event.on('verify', () => {
-      this.passwdModal = true;
-        })
+    this.$event.on('verify', (t = false) => {
+      this.passwdModal = t;
+    })
+    if (!this.notifed) {
+      this.setPlacement('top')
+      $message.success('访问加密文档需要验证密码', {
+        render: renderMessage,
+        closable: true,
+        duration: 5000,
+        keepAliveOnHover: true,
+        onAfterLeave: () => {
+          this.setPlacement();
+          this.setNotifed()
+        }
+      })
+    }
   }
 };
 </script>

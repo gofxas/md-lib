@@ -21,7 +21,10 @@ onMounted(() => {
   initConfig().then(() => {
     getUserinfo()
   })
+  // setPlacement('top')
 });
+
+
 </script>
 
 <style scoped>

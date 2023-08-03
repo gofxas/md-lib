@@ -24,6 +24,14 @@
                   xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24">
                   <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" fill="currentColor"></path>
                 </svg></n-icon></n-button>
+            <n-button 
+            v-if="hasPasswd"
+            @click="lockStatus" quaternary circle>
+              <n-icon :color="user_lock_passwd?'#63e2b7':''" size="18">
+                <LockOpen16Regular v-if="user_lock_passwd"/>
+                <LockClosed16Regular v-else/>
+              </n-icon>
+            </n-button>
             <n-button @click="setting" quaternary circle><n-icon size="18">
                 <Settings20Filled />
               </n-icon></n-button>
@@ -47,10 +55,10 @@
       <!--  -->
       <template v-if="data.length">
         <n-tree ref="treeInstRef" virtual-scroll block-line :data="data" key-field="id" label-field="title"
-          :default-selected-keys="selectedKeys" :selected-keys="selectedKeys" :cancelable="false" :expand-on-click="true"
-          :render-label="renderLabel" :render-switcher-icon="renderSwitcherIcon"
-          :on-update:selected-keys="selectedHandler" :on-update:expanded-keys="updatePrefixWithExpaned"
-          style="height: calc(100% - 100px)" />
+          :default-selected-keys="selectedKeys" :selected-keys="selectedKeys" :expanded-keys="expandedKeys"
+          :cancelable="false" :expand-on-click="true" :render-label="renderLabel"
+          :render-switcher-icon="renderSwitcherIcon" :on-update:selected-keys="selectedHandler"
+          :on-update:expanded-keys="updatePrefixWithExpaned" style="height: calc(100% - 100px)" />
       </template>
       <template v-else>
         <div class="no-data-tree" style="height: calc(100% - 100px)">
@@ -90,6 +98,7 @@
 import { NDropdown, NAlert, NModal, NCard, NTree, NSpace, NButton, NIcon, NInput } from "naive-ui";
 import { h } from "vue";
 import { ChevronRight16Regular, DocumentBulletList20Regular, Settings20Filled, StarEmphasis24Regular, Folder20Regular, FolderOpen20Regular, LockClosed16Regular, LockOpen16Regular } from '@vicons/fluent'
+import { FileMarkdownOutlined } from '@vicons/antd'
 import TreeItem from '@/components/treeitem';
 import DropdownItem from '@/components/dropdownitem';
 import { mapState, mapMutations } from 'vuex'
@@ -107,6 +116,8 @@ export default {
     ChevronRight16Regular,
     StarEmphasis24Regular,
     Settings20Filled,
+    LockClosed16Regular,
+    LockOpen16Regular,
     TreeItem,
     NDropdown
   },
@@ -121,7 +132,8 @@ export default {
       expand: true,
       // 下拉菜单条目
       options: [
-        { label: () => h(DropdownItem, { label: "上锁", type: "primary" }), key: 'lock', },
+        { label: () => h(DropdownItem, { label: "加密", type: "primary" }), key: 'lock', },
+        { label: () => h(DropdownItem, { label: "解密", type: "primary" }), key: 'unlock', },
         { label: () => h(DropdownItem, { label: "编辑", type: "info" }), key: 'edit', },
         { label: () => h(DropdownItem, { label: "新增", type: "default" }), key: 'add', },
         { label: () => h(DropdownItem, { label: "删除", type: "error" }), key: 'del', },
@@ -147,6 +159,12 @@ export default {
       updatePrefixWithExpaned: (_keys, _option, meta) => {
         if (!meta.node)
           return;
+        // 遇到文档 文件夹上锁了 
+        if (meta.node.locked && !this.user_lock_passwd) {
+          this.$event.emit('verify', true)
+          return;
+        }
+        this.setExpandedKeys(_keys)
         switch (meta.action) {
           case "expand":
             meta.node.prefix = () => h(NIcon, null, {
@@ -163,14 +181,22 @@ export default {
     };
   },
   computed: {
-    ...mapState('layout', ['selectedKeys']),
-    ...mapState('config', ['user_lock_passwd']),
+    ...mapState('layout', ['selectedKeys', 'expandedKeys']),
+    ...mapState('config', ['user_lock_passwd', 'hasPasswd']),
     computedContextMenu() {
-      return this.options;
+      const locked = this.rightClickOption?.locked;
+      let options = []
+      if (locked) {
+        options = this.options.filter(t => t.key === 'unlock')
+      } else {
+        options = this.options.filter(t => t.key !== 'unlock')
+      }
+      return options;
     }
   },
   methods: {
-    ...mapMutations('layout', ['setSelectedKeys', 'setPlacement']),
+    ...mapMutations('layout', ['setSelectedKeys', 'setPlacement', 'setExpandedKeys']),
+    ...mapMutations('config', ['setState']),
     homeMD() {
       if (this.isEdit) {
         window.$message.info(
@@ -183,6 +209,13 @@ export default {
       }
       this.setSelectedKeys([1]);
       this.rightClickOption = {};
+    },
+    lockStatus() {
+      if (this.user_lock_passwd) {
+        this.setState(['user_lock_passwd', ''])
+      } else {
+        this.$event.emit('verify', true)
+      }
     },
     createNew() {
       if (window.appContext && window.appContext.electron()) {
@@ -213,8 +246,38 @@ export default {
               }
             )
           } else {
-            // this.selectedKeys = this.setSelectedKeys([this.rightClickOption.id])
-            console.log(this.rightClickOption.id)
+            if (!this.hasPasswd) {
+              window.$message.warning(
+                "请先在设置里面设置一个密码！",
+                {
+                  keepAliveOnHover: true
+                }
+              )
+              return;
+            }
+            if (window.appContext && window.appContext.electron()) {
+              appContext.database.lockDoc(this.rightClickOption.id).then(res => {
+                this.initTreeData();
+                this.rightClickOption = {};
+              })
+            }
+          }
+          break;
+        case 'unlock':
+          if (this.isEdit) {
+            window.$message.info(
+              "文档正在编辑 并未保存！",
+              {
+                keepAliveOnHover: true
+              }
+            )
+          } else {
+            if (window.appContext && window.appContext.electron()) {
+              appContext.database.unlockDoc(this.rightClickOption.id).then(res => {
+                this.initTreeData();
+                this.rightClickOption = {};
+              })
+            }
           }
           break;
         case 'edit':
@@ -275,7 +338,7 @@ export default {
       if (meta.action === 'select' && !this.isEdit) {
         this.rightClickOption = option[0];
         if (this.rightClickOption.locked && !this.user_lock_passwd) {
-          this.$event.emit('verify')
+          this.$event.emit('verify', true)
           return;
         }
         this.selectedKeys = this.setSelectedKeys(keys);
@@ -332,7 +395,7 @@ export default {
             "id": 4,
             "pid": 2,
             "title": "我的文档2",
-            "locked": null,
+            "locked": true,
             isLeaf: false,
             prefix: () => h(NIcon, null, {
               default: () => h(Folder20Regular)
@@ -429,13 +492,14 @@ export default {
     },
     // 转化数组成 tree 结构
     convert(list) {
+      const lock_passwd = this.user_lock_passwd;
       const res = [];
       const map = list.reduce((res, v) => (
         res[v.id] = v, v
           .prefix = () => h(NIcon, null, {
-            default: () => h(DocumentBulletList20Regular)
+            default: () => h(FileMarkdownOutlined)
           }),
-        v.suffix = () => h(NIcon, null, { default: () => v.locked ? h(LockClosed16Regular) : '' }),
+        v.suffix = () => h(NIcon, null, { default: () => (v.locked && !lock_passwd) ? h(LockClosed16Regular) : (v.locked && lock_passwd) ? h(LockOpen16Regular) : '' }),
         v.isLeaf = true,
         res), {})
       for (const item of list) {
@@ -476,7 +540,6 @@ export default {
   created() {
     this.initTreeData();
     this.$event.on('refresh', () => {
-      console.log('refresh');
       this.rightClickOption = {}
       this.initTreeData()
     })

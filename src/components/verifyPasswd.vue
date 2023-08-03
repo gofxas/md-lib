@@ -9,11 +9,11 @@
     </n-card>
 </template>
 <script>
-import { NCard,NInput,NSpace,NButton } from 'naive-ui'
+import { NCard, NInput, NSpace, NButton } from 'naive-ui'
 import { mapState, mapMutations } from 'vuex'
 export default {
     name: 'verify-passwd',
-    components: { NCard,NInput, NSpace, NButton },
+    components: { NCard, NInput, NSpace, NButton },
     date() {
         return {
             passwd: ""
@@ -31,10 +31,26 @@ export default {
                 if (!res) {
                     $message.warning('密码不正确！')
                 } else {
-                    this.setState(['user_lock_passwd', this.passwd])
+                    this.setState(['user_lock_passwd', this.passwd]);
+                    this.$event.emit('refresh');
+                    this.$event.emit('verify');
+                    window.$message.success(
+                        "验证成功！",
+                        {
+                            keepAliveOnHover: true
+                        }
+                    )
                 }
             } else {
-                this.setState(['user_lock_passwd', this.passwd])
+                this.setState(['user_lock_passwd', this.passwd]);
+                this.$event.emit('refresh');
+                this.$event.emit('verify');
+                window.$message.success(
+                    "验证成功！",
+                    {
+                        keepAliveOnHover: true
+                    }
+                )
             }
         }
     }

@@ -37,11 +37,33 @@ const deleteDoc = async (ids = []) => {
   return result;
 };
 
-const initConfig = async (config = {
-  passwd: "",
-  bd_access_token: "",
-  bd_refresh_token: "",
-}) => {
+const lockDoc = async (id) => {
+  const result = await Files.update(
+    { locked: true },
+    {
+      where: { id },
+    }
+  );
+  return result;
+};
+
+const unlockDoc = async (id) => {
+  const result = await Files.update(
+    { locked: false },
+    {
+      where: { id },
+    }
+  );
+  return result;
+};
+
+const initConfig = async (
+  config = {
+    passwd: "",
+    bd_access_token: "",
+    bd_refresh_token: "",
+  }
+) => {
   const result = await Configs.create(config);
   return result;
 };
@@ -105,4 +127,6 @@ module.exports = {
   verifyPassword,
   updateConfig,
   initConfig,
+  lockDoc,
+  unlockDoc,
 };
