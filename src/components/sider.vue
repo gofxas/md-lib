@@ -120,7 +120,7 @@ export default {
       expand: true,
       // 下拉菜单条目
       options: [
-        { label: () => h(DropdownItem, { label: "查看", type: "primary" }), key: 'view', },
+        { label: () => h(DropdownItem, { label: "上锁", type: "primary" }), key: 'lock', },
         { label: () => h(DropdownItem, { label: "编辑", type: "info" }), key: 'edit', },
         { label: () => h(DropdownItem, { label: "新增", type: "default" }), key: 'add', },
         { label: () => h(DropdownItem, { label: "删除", type: "error" }), key: 'del', },
@@ -200,7 +200,7 @@ export default {
     handleDropdownSelect(key) {
       // $message.info(String(key));
       switch (key) {
-        case 'view':
+        case 'lock':
           if (this.isEdit) {
             window.$message.info(
               "文档正在编辑 并未保存！",
@@ -209,7 +209,8 @@ export default {
               }
             )
           } else {
-            this.selectedKeys = this.setSelectedKeys([this.rightClickOption.id])
+            // this.selectedKeys = this.setSelectedKeys([this.rightClickOption.id])
+            console.log(this.rightClickOption.id)
           }
           break;
         case 'edit':
