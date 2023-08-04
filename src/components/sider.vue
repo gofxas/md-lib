@@ -213,6 +213,7 @@ export default {
     lockStatus() {
       if (this.user_lock_passwd) {
         this.setState(['user_lock_passwd', ''])
+        this.setExpandedKeys([])
       } else {
         this.$event.emit('verify', true)
       }

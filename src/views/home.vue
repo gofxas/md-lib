@@ -1,5 +1,5 @@
 <template>
-  <div class="app-wrapper">
+  <div class="app-wrapper" >
     <div class="app-wrapper-menu">
       <Sider :isEdit="isEdit" @edit="isEdit = true" />
     </div>
@@ -65,6 +65,10 @@ export default {
       }
       this.isEdit = e;
     },
+    dropFile(e) {
+      console.log(e)
+      // e.stopPropagation();
+    },
   },
   created() {
     this.$event.on('verify', (t = false) => {
@@ -83,6 +87,8 @@ export default {
         }
       })
     }
+  },
+  mounted() {
   }
 };
 </script>
@@ -108,5 +114,12 @@ export default {
   .editor {
     height: calc(100% - 92px);
   }
+}
+.app-dropdown {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 99;
+  background-color: #97979712;
 }
 </style>

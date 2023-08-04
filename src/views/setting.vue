@@ -88,6 +88,8 @@ export default {
   methods: {
     ...mapMutations('config', ['setState']),
     ...mapActions('config', ['initConfig', "getUserinfo"]),
+    ...mapMutations('layout', ['setExpandedKeys']),
+
     returnHome() {
       this.$router.replace("/");
     },
@@ -127,7 +129,9 @@ export default {
       if (window.appContext && window.appContext.electron()) {
         appContext.database.setPassword(this.npasswd, this.passwd).then(res => {
           if (res.status) {
-            this.initConfig()
+            this.initConfig();
+            this.setState(['user_lock_passwd', ''])
+            this.setExpandedKeys([])
           }
         })
       }

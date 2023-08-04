@@ -5,6 +5,7 @@
   "main": "main.js",
   "description": "markdown library",
   "author": "ryu",
+  "email":"yier4ha@gmail.com",
   "scripts": {
     "dev:h5": "vite",
     "build": "vite build",
@@ -59,7 +60,7 @@
   },
   "build": {
     "icon": "./icon.png",
-    "asar": true,
+    "asar": false,
     "compression": "normal",
     "nsis": {
       "oneClick": false,
