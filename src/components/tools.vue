@@ -1,6 +1,6 @@
 <template>
   <div class="app-tools">
-    <n-input class="art-title" v-if="isEdit" :value="title" :on-input="inputHandler"></n-input>
+    <n-input class="art-title" placeholder="请输入文档标题" v-if="isEdit" :value="title" :on-input="inputHandler"></n-input>
     <p class="art-title" v-else>{{ title }}</p>
     <n-space>
       <template v-if="isEdit">

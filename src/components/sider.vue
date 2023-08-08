@@ -81,7 +81,7 @@
   </div>
   <n-modal v-model:show="showModal">
     <n-card style="width: 600px" title="添加文档" :bordered="false" size="huge" role="dialog" aria-modal="true">
-      <n-input autofocus v-model:value="docname" type="text" placeholder="基本的 Input" />
+      <n-input autofocus v-model:value="docname" type="text" placeholder="请输入文档标题" />
       <template #footer>
         <n-space justify="end">
           <n-button type="primary" @click="createNew">创建</n-button>

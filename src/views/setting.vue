@@ -11,6 +11,7 @@
         <p class="bd-info" v-if="bd_userinfo.baidu_name">百度昵称：{{ bd_userinfo.baidu_name }}</p>
         <p class="bd-info" v-if="bd_userinfo.netdisk_name">网盘昵称：{{ bd_userinfo.netdisk_name }}</p>
         <p class="bd-info">VIP等级：{{ vipLevel(bd_userinfo.vip_type) }}</p>
+        <n-button  quaternary type="info" @click="back_files_modal = true">查看备份文档</n-button>
       </div>
       <n-form>
         <n-form-item v-if="!bd_userinfo?.uk" label="百度云:">
@@ -60,6 +61,16 @@
         </template>
       </n-card>
     </n-modal>
+    <n-modal v-model:show="back_files_modal">
+      <n-card style="width: 600px" title="百度云备份" :bordered="false" size="huge" role="dialog" aria-modal="true">
+        <Backfiles v-if="back_files_modal"/>
+        <template #footer>
+          <n-space justify="end">
+            <n-button @click="back_files_modal = false">取消</n-button>
+          </n-space>
+        </template>
+      </n-card>
+    </n-modal>
   </div>
 </template>
 
@@ -67,13 +78,15 @@
 import { NInput, NCard, NModal, NButton, NSwitch, NForm, NFormItem, NSpace } from "naive-ui";
 import { mapState, mapMutations, mapActions } from 'vuex';
 import Apptitle from '@/components/apptitle';
+import Backfiles from '@/components/backfiles';
 export default {
   name: "Setting",
-  components: { NInput, NCard, NModal, NSwitch, NForm, NFormItem, NButton, NSpace, Apptitle },
+  components: { NInput, NCard, NModal, NSwitch, NForm, NFormItem, NButton, NSpace, Apptitle, Backfiles },
   data() {
     return {
       passwd: '',
       bdmodal: false,
+      back_files_modal: true,
       npasswd: '',
       npasswd_repeat: '',
       qrcode_url: '',
@@ -151,7 +164,7 @@ scope=basic,netdisk`;
       }
     },
 
-    async getScanRes(expires_in, interval) {
+    async getScanRes(expires_in, interval = 5) {
       const expires_time = (new Date()).getTime() + expires_in * 1000;
       this.timer = setInterval(async () => {
         if ((new Date()).getTime() > expires_time) {
@@ -173,10 +186,12 @@ scope=basic,netdisk`;
             this.qrcode_status = true;
             this.setState(['bd_access_token', access_token])
             this.setState(['bd_refresh_token', refresh_token])
-            appContext.database.updateConfig({
+            await appContext.database.updateConfig({
               bd_access_token: access_token,
               bd_refresh_token: refresh_token,
-            })
+            });
+            this.getUserinfo();
+            this.bdmodal = false;
           }
         } catch (e) {
           console.log("等待用户操作！")
@@ -197,7 +212,7 @@ scope=basic,netdisk`;
   created() {
     this.initConfig()
       .then(() => {
-        // this.getUserinfo()
+        this.getUserinfo()
       })
   }
 };
