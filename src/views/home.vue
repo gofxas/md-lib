@@ -110,7 +110,7 @@ export default {
   flex: 1;
   display: flex;
   flex-direction: column;
-
+  width: calc(100% - 320px);
   .editor {
     height: calc(100% - 92px);
   }

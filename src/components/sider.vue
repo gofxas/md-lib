@@ -17,7 +17,7 @@
                   </g>
                 </g>
               </svg></n-icon>
-            <span>文笥</span>
+            <span :class="appdrag?'dragable':''">文笥</span>
           </h2>
           <n-space>
             <n-button @click="handleRootDoc" quaternary circle><n-icon size="18"><svg xmlns="http://www.w3.org/2000/svg"
@@ -147,6 +147,7 @@ export default {
       rightClickOption: {},
       // 菜单数据
       data: [],
+      appdrag: true,
       showModal: false,
       docname: '新的文档',
       renderLabel: ({ option }) => h(TreeItem, {
@@ -544,6 +545,9 @@ export default {
       this.rightClickOption = {}
       this.initTreeData()
     })
+    this.$event.on('dragable', t => {
+      this.appdrag = t;
+    })
   }
 };
 </script>
@@ -599,7 +603,6 @@ export default {
 
   span {
     flex: 1;
-    -webkit-app-region: drag;
   }
 }
 
@@ -619,5 +622,9 @@ export default {
   .n-tree-node {
     align-items: center;
   }
+}
+
+.dragable {
+  -webkit-app-region: drag;
 }
 </style>

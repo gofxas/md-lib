@@ -1,5 +1,5 @@
 <template>
-  <Editor v-if="isEdit" :locale="locales['zh_Hans']" :value="value" :editorConfig="{
+  <Editor @click="toolClick" ref="editor" v-if="isEdit" :locale="locales['zh_Hans']" :value="value" :editorConfig="{
     sidebar: null,
   }" :uploadImages="uploadFile" :plugins="plugins" @change="handleChange" />
   <n-scrollbar class="viewer" v-else>
@@ -88,7 +88,16 @@ export default {
     handleChange(v) {
       this.setValue(v);
     },
-  },
+    toolClick(e) {
+      // console.log(e)
+      this.$nextTick(() => {
+        const el = this.$refs.editor.el;
+        const bytemd = el.querySelector('.bytemd');
+        const dragable = bytemd.classList.contains('bytemd-fullscreen');
+        this.$event.emit('dragable', !dragable)
+      })
+    }
+  }
 };
 </script>
 <style lang="less">
@@ -102,10 +111,12 @@ export default {
   background-image: url(/bg.png);
   background-color: #fcfaf2;
 }
+
 .bytemd-toolbar {
   background-image: url(/bg.png);
   background-color: #fcfaf2;
 }
+
 .markdown-body,
 .CodeMirror pre.CodeMirror-line,
 .CodeMirror pre.CodeMirror-line-like,
@@ -121,14 +132,17 @@ export default {
   background-image: url(/bg.png);
   background-color: #fcfaf2;
 }
-.CodeMirror  {
+
+.CodeMirror {
   background-image: url(/bg.png);
   background-color: #fcfaf2;
 }
+
 .CodeMirror-scroll {
   background-image: url(/bg.png);
   background-color: #fcfaf2;
 }
+
 .markdown-body tt,
 .markdown-body code,
 .markdown-body samp {
@@ -156,4 +170,5 @@ export default {
     border-radius: 3px;
     background-color: transparent;
   }
-}</style>
+}
+</style>
