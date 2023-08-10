@@ -11,7 +11,7 @@
         <p class="bd-info" v-if="bd_userinfo.baidu_name">百度昵称：{{ bd_userinfo.baidu_name }}</p>
         <p class="bd-info" v-if="bd_userinfo.netdisk_name">网盘昵称：{{ bd_userinfo.netdisk_name }}</p>
         <p class="bd-info">VIP等级：{{ vipLevel(bd_userinfo.vip_type) }}</p>
-        <n-button  quaternary type="info" @click="back_files_modal = true">查看备份文档</n-button>
+        <n-button  quaternary type="info" @click="() => back_files_modal = true">查看备份文档</n-button>
       </div>
       <n-form>
         <n-form-item v-if="!bd_userinfo?.uk" label="百度云:">
@@ -102,7 +102,6 @@ export default {
     ...mapMutations('config', ['setState']),
     ...mapActions('config', ['initConfig', "getUserinfo"]),
     ...mapMutations('layout', ['setExpandedKeys']),
-
     returnHome() {
       this.$router.replace("/");
     },

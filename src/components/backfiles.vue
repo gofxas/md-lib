@@ -1,32 +1,19 @@
 <template >
     <div class="back-files">
-        <div class="back-file-item">
+        <div class="back-files-nodata">
+            <n-button @click="backupNow">创建备份</n-button>
+        </div>
+        <div class="back-file-item" v-for="file in FileList" :key="file.fs_id">
             <div class="back-file-item_left">
-                <span class="file-name">备份数据库 20230808</span>
-                <span class="file-time">2023-08-08</span>
+                <span class="file-name">{{ file.server_filename }}</span>
+                <span class="file-time">{{ file.server_mtime }}</span>
             </div>
             <n-space>
-                <n-button quaternary circle type="success">
+                <n-button @click="syncDB" quaternary circle type="success">
                     <n-icon size="18">
                         <ArrowSyncCircle20Regular />
                     </n-icon>
                 </n-button>
-                <n-popconfirm 
-                positive-text="删除" 
-                negative-text="取消"
-                :positive-button-props="{
-                    type:'error'
-                }"
-                >
-                    <template #trigger>
-                        <n-button quaternary circle type="error">
-                            <n-icon size="18">
-                                <Delete20Regular />
-                            </n-icon>
-                        </n-button>
-                    </template>
-                    不充钱怎么变强？
-                </n-popconfirm>
             </n-space>
         </div>
     </div>
@@ -42,37 +29,86 @@ export default {
     data() {
         return {
             FileList: [],
+            isNeedDir: false
         }
     },
-    computed:{
-        ...mapState('config',['bd_access_token'])
+    computed: {
+        ...mapState('config', ['bd_access_token','backupAt'])
     },
-    methods:{
+    methods: {
+        ...mapMutations('config', ['setState']),
         async getBackfiles() {
             if (this.bd_access_token) {
                 const url = `https://pan.baidu.com/rest/2.0/xpan/file?method=list&access_token=${this.bd_access_token}&dir=${encodeURIComponent('/apps/文笥/')}`
                 const response = await fetch(url);
                 const res = await response.json();
-                if (res.code == 0) {
+                if (res.errno == 0) {
                     this.FileList = res.list;
-                }else if(res.code == -7) {
+                } else if (res.errno == -7) {
                     alert('无权访问')
                 }
-                else if (res.code == -9) {
+                else if (res.errno == -9) {
                     console.log('目录不存在!');
+                    this.isNeedDir = true;
                 }
             }
         },
         async initBackDir() {
             if (this.bd_access_token) {
-                const url = `https://pan.baidu.com/rest/2.0/xpan/file?method=create&access_token=${this.bd_access_token}&path=${encodeURIComponent('/apps/文笥/')}&isdir=1`;
-                const response = await fetch(url);
+                const url = `https://pan.baidu.com/rest/2.0/xpan/file?method=create&access_token=${this.bd_access_token}`;
+                const response = await fetch(url, {
+                    body: `path=${encodeURI('/apps/文笥')}&isdir=1`,
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    },
+                    method: "POST"
+                });
                 const res = await response.json();
             }
+        },
+        // 立即备份 初次上传 
+        async backupNow() {
+            if (this.bd_access_token) {
+                if (this.isNeedDir) {
+                    await initBackDir();
+                }
+                const fileBlob = appContext.fs.readFileSync('database/database.sqlite');
+                const backfile = new File(fileBlob, 'backup.sqlite');
+                const url = `https://pan.baidu.com/rest/2.0/xpan/file?method=upload&access_token=${this.bd_access_token}&path=${encodeURLComponent('/apps/文笥/backup.sqlite')}&ondup=overwrite`;
+                const formdata = new FormData();
+                formdata.append('file', backfile);
+                fetch(url, {
+                    method: 'POST',
+                    body: formdata
+                }).then(res => res.json())
+                .then(result => {
+                    if (result.fs_id) {
+                        $message.success('备份成功！');
+                        const backupTime = new Date();
+                        appContext.database.updateConfig({backupAt: backupTime})
+                        .then(() => {
+                            this.setState([backupAt, backupTime]);
+                        });
+                        this.getBackfiles();
+                    }
+                })
+            }
+        },
+        /**
+         * syncDB 同步数据库 
+         * 这一步 在node层进行操作 输入接口结果给view层
+         * 1， 先下载线上版本 
+         * 2， 加载线上版本数据库 
+         * 3， 本地数据库对比，主要对比同ID下的 更新时间，保留更新时间。
+         * 4， 本地有 线上无 -> 合并到线上备份
+         * 5,  本地无 线上有 -> 用户自行选择 保留还是删除
+         */
+        async syncDB(){
+            // todo
         }
     },
     created() {
-
+        this.getBackfiles();
     }
 }
 </script>
@@ -87,16 +123,20 @@ export default {
     cursor: pointer;
     transition: .5s background-color;
     border-radius: 5px;
+
     &:hover {
         background-color: #f2f3f4;
     }
+
     &_left {
         display: flex;
         flex-direction: column;
     }
+
     .file-name {
         font-weight: bold;
     }
+
     .file-time {
         font-size: 13px;
         color: #a5a5a5;

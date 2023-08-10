@@ -37,6 +37,9 @@ const Configs = sequelize.define('Configs', {
         primaryKey: true,
         autoIncrement: true,
     },
+    backupAt:{
+        type: DataTypes.TIME,
+    },
     passwd: {
         type: DataTypes.STRING,
     },

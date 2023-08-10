@@ -6,7 +6,8 @@ export default {
       bd_userinfo: {},
       hasPasswd: false,
       passwd_vertied: false,
-      user_lock_passwd:"",
+      user_lock_passwd: "",
+      backupAt: null,
     };
   },
   mutations: {
@@ -21,7 +22,7 @@ export default {
         const config = await appContext.database.getConfig();
         if (!config) {
           const config_init = await appContext.database.initConfig();
-          const { passwd, bd_access_token, bd_refresh_token } =
+          const { passwd, bd_access_token, bd_refresh_token, backupAt } =
             config_init.dataValues;
           if (passwd) {
             commit("setState", ["hasPasswd", true]);
@@ -31,8 +32,9 @@ export default {
           }
           commit("setState", ["bd_access_token", bd_access_token]);
           commit("setState", ["bd_refresh_token", bd_refresh_token]);
+          commit("setState", ["backupAt", backupAt]);
         } else {
-          const { passwd, bd_access_token, bd_refresh_token } =
+          const { passwd, bd_access_token, bd_refresh_token, backupAt } =
             config.dataValues;
           if (passwd) {
             commit("setState", ["hasPasswd", true]);
@@ -42,6 +44,7 @@ export default {
           }
           commit("setState", ["bd_access_token", bd_access_token]);
           commit("setState", ["bd_refresh_token", bd_refresh_token]);
+          commit("setState", ["backupAt", backupAt]);
         }
       } else {
         const { passwd, bd_access_token, bd_refresh_token } = {
