@@ -11,7 +11,7 @@
         <p class="bd-info" v-if="bd_userinfo.baidu_name">百度昵称：{{ bd_userinfo.baidu_name }}</p>
         <p class="bd-info" v-if="bd_userinfo.netdisk_name">网盘昵称：{{ bd_userinfo.netdisk_name }}</p>
         <p class="bd-info">VIP等级：{{ vipLevel(bd_userinfo.vip_type) }}</p>
-        <n-button  quaternary type="info" @click="() => back_files_modal = true">查看备份文档</n-button>
+        <n-button  quaternary type="info" @click="backUp">查看备份文档</n-button>
       </div>
       <n-form>
         <n-form-item v-if="!bd_userinfo?.uk" label="百度云:">
@@ -61,16 +61,6 @@
         </template>
       </n-card>
     </n-modal>
-    <n-modal v-model:show="back_files_modal">
-      <n-card style="width: 600px" title="百度云备份" :bordered="false" size="huge" role="dialog" aria-modal="true">
-        <Backfiles v-if="back_files_modal"/>
-        <template #footer>
-          <n-space justify="end">
-            <n-button @click="back_files_modal = false">取消</n-button>
-          </n-space>
-        </template>
-      </n-card>
-    </n-modal>
   </div>
 </template>
 
@@ -86,7 +76,6 @@ export default {
     return {
       passwd: '',
       bdmodal: false,
-      back_files_modal: true,
       npasswd: '',
       npasswd_repeat: '',
       qrcode_url: '',
@@ -102,6 +91,9 @@ export default {
     ...mapMutations('config', ['setState']),
     ...mapActions('config', ['initConfig', "getUserinfo"]),
     ...mapMutations('layout', ['setExpandedKeys']),
+    backUp() {
+      this.$router.replace("/backup");
+    },
     returnHome() {
       this.$router.replace("/");
     },

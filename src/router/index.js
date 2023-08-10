@@ -8,7 +8,7 @@ const router = createRouter({
       name: 'Home',
       component: () => import("../views/home.vue"),
       meta: {
-        title: "home",
+        title: "Home",
       }
     },
     {
@@ -16,7 +16,15 @@ const router = createRouter({
       name: 'Setting',
       component: () => import("../views/setting.vue"),
       meta: {
-        title: "home",
+        title: "Setting",
+      }
+    },
+    {
+      path: '/backup',
+      name: 'Backup',
+      component: () => import("../views/backup.vue"),
+      meta: {
+        title: "Backup",
       }
     }
   ]

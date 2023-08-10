@@ -1,12 +1,12 @@
 <template >
     <div class="back-files">
-        <div class="back-files-nodata">
-            <n-button @click="backupNow">创建备份</n-button>
+        <div v-if="FileList.length == 0" class="back-files-nodata">
+            <n-button @click="backupNow" type="primary">创建备份</n-button>
         </div>
         <div class="back-file-item" v-for="file in FileList" :key="file.fs_id">
             <div class="back-file-item_left">
-                <span class="file-name">{{ file.server_filename }}</span>
-                <span class="file-time">{{ file.server_mtime }}</span>
+                <span class="file-name">上一次的备份</span>
+                <span class="file-time">{{ (new Date(file.server_mtime * 1000)).toLocaleString() }}</span>
             </div>
             <n-space>
                 <n-button @click="syncDB" quaternary circle type="success">
@@ -33,7 +33,7 @@ export default {
         }
     },
     computed: {
-        ...mapState('config', ['bd_access_token','backupAt'])
+        ...mapState('config', ['bd_access_token', 'backupAt'])
     },
     methods: {
         ...mapMutations('config', ['setState']),
@@ -74,24 +74,24 @@ export default {
                 }
                 const fileBlob = appContext.fs.readFileSync('database/database.sqlite');
                 const backfile = new File(fileBlob, 'backup.sqlite');
-                const url = `https://pan.baidu.com/rest/2.0/xpan/file?method=upload&access_token=${this.bd_access_token}&path=${encodeURLComponent('/apps/文笥/backup.sqlite')}&ondup=overwrite`;
+                const url = `https://pan.baidu.com/rest/2.0/xpan/file?method=upload&access_token=${this.bd_access_token}&path=${encodeURIComponent('/apps/文笥/backup.sqlite')}&ondup=overwrite`;
                 const formdata = new FormData();
                 formdata.append('file', backfile);
                 fetch(url, {
                     method: 'POST',
                     body: formdata
                 }).then(res => res.json())
-                .then(result => {
-                    if (result.fs_id) {
-                        $message.success('备份成功！');
-                        const backupTime = new Date();
-                        appContext.database.updateConfig({backupAt: backupTime})
-                        .then(() => {
-                            this.setState([backupAt, backupTime]);
-                        });
-                        this.getBackfiles();
-                    }
-                })
+                    .then(result => {
+                        if (result.fs_id) {
+                            $message.success('备份成功！');
+                            const backupTime = new Date();
+                            appContext.database.updateConfig({ backupAt: backupTime })
+                                .then(() => {
+                                    this.setState(['backupAt', backupTime]);
+                                });
+                            this.getBackfiles();
+                        }
+                    })
             }
         },
         /**
@@ -103,7 +103,7 @@ export default {
          * 4， 本地有 线上无 -> 合并到线上备份
          * 5,  本地无 线上有 -> 用户自行选择 保留还是删除
          */
-        async syncDB(){
+        async syncDB() {
             // todo
         }
     },
@@ -113,7 +113,14 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.back-files {}
+.back-files {
+    max-width: 400px;
+    width: 400px;
+    margin-top: 12px;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgb(224, 224, 230);
+}
 
 .back-file-item {
     display: flex;
