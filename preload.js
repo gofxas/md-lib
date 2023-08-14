@@ -1,7 +1,11 @@
 const { contextBridge, ipcRenderer } = require("electron");
 const fs = require("fs");
 const path = require("path");
+const { Buffer } = require("node:buffer");
 const database = require("./database/service");
+const Diffinstance = require("./backup/index.js");
+
+
 const readme = fs.readFileSync(path.join(__dirname, "README.md"), {
   encoding: "utf-8",
 });
@@ -19,4 +23,6 @@ contextBridge.exposeInMainWorld("appContext", {
   readme,
   BD_APP_KEY,
   BD_APP_SECRET_Key,
+  Diffinstance,
+  Buffer,
 });
