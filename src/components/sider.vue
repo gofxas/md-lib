@@ -37,7 +37,7 @@
               </n-icon></n-button>
           </n-space>
         </n-space>
-        <n-input :disabled="data.length === 0" :title="data.length === 0 ? '请先添加文档' : ''" style="margin-top: 20px"
+        <n-input v-model:value="pattern" :disabled="data.length === 0" :title="data.length === 0 ? '请先添加文档' : ''" style="margin-top: 20px"
           placeholder="搜索">
           <template #suffix>
             <n-icon>
@@ -54,7 +54,10 @@
       </div>
       <!--  -->
       <template v-if="data.length">
-        <n-tree ref="treeInstRef" virtual-scroll block-line :data="data" key-field="id" label-field="title"
+        <n-tree 
+        :pattern="pattern"
+        :show-irrelevant-nodes="false"
+        ref="treeInstRef" virtual-scroll block-line :data="data" key-field="id" label-field="title"
           :default-selected-keys="selectedKeys" :selected-keys="selectedKeys" :expanded-keys="expandedKeys"
           :cancelable="false" :expand-on-click="true" :render-label="renderLabel"
           :render-switcher-icon="renderSwitcherIcon" :on-update:selected-keys="selectedHandler"
@@ -129,6 +132,7 @@ export default {
   },
   data() {
     return {
+      pattern:'',
       expand: true,
       // 下拉菜单条目
       options: [

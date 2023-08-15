@@ -23,17 +23,17 @@
         </template>
     </n-spin>
     <n-modal :close-on-esc="false" :mask-closable="false" :on-after-leave="modalLeave" v-model:show="modal_show">
-        <n-card style="width: 600px" title="请确认以下文件" :bordered="false" size="huge" role="dialog" aria-modal="true">
+        <n-card style="width: 600px" :bordered="false" size="huge" role="dialog" aria-modal="true">
             <div>
-                <p>
+                <n-alert style="margin-bottom: 12px;" title="请确认以下文件" type="warning">
                     下面的文件本地不存在，请勾选需要保留的文档，没有勾选的将会彻底的删除。
-                </p>
+                </n-alert>
                 <n-data-table :row-key="row => row.id" v-model:checked-row-keys="checkedRowKeys" :columns="columns"
                     :data="diff_files" :pagination="pagination" :max-height="300" />
             </div>
             <template #footer>
                 <n-space justify="end">
-                    <n-button @click="updateBackup">取消</n-button>
+                    <n-button @click="updateBackup" type="primary">确定</n-button>
                     <n-button @click="modal_show = false">取消</n-button>
                 </n-space>
             </template>
@@ -41,13 +41,13 @@
     </n-modal>
 </template>
 <script>
-import { NIcon, NSpin, NButton, NDataTable, NSpace, NPopconfirm, NModal, NCard } from 'naive-ui'
+import { NIcon,NAlert, NSpin, NButton, NDataTable, NSpace, NPopconfirm, NModal, NCard } from 'naive-ui'
 import { ArrowSyncCircle20Regular, Delete20Regular } from '@vicons/fluent'
 import { mapState, mapMutations, mapActions } from 'vuex';
 import { h } from 'vue';
 export default {
     name: 'back-files',
-    components: { NIcon, NSpin, NDataTable, NButton, NSpace, NPopconfirm, ArrowSyncCircle20Regular, Delete20Regular, NModal, NCard },
+    components: { NIcon,NAlert, NSpin, NDataTable, NButton, NSpace, NPopconfirm, ArrowSyncCircle20Regular, Delete20Regular, NModal, NCard },
     data() {
         return {
             FileList: [],
