@@ -36,4 +36,9 @@ document.body.addEventListener('click', function () {
 });
 const Instance = createApp(App);
 Instance.config.globalProperties.$event = eventbus;
-Instance.use(store).use(router).mount('#app')
+Instance.use(store).use(router)
+Instance.mount('#app');
+
+setTimeout(() => {
+    document.querySelector("#app-loading").remove()
+},500)

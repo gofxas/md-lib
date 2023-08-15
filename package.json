@@ -60,7 +60,7 @@
   },
   "build": {
     "icon": "./icon.png",
-    "asar": false,
+    "asar": true,
     "compression": "normal",
     "nsis": {
       "oneClick": false,

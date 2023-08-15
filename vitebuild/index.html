@@ -1,14 +1,49 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="./logo.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>文笥-MDkeep</title>
-    <script type="module" crossorigin src="./assets/index-98890a5f.js"></script>
+    <script type="module" crossorigin src="./assets/index-0dbc66df.js"></script>
     <link rel="stylesheet" href="./assets/index-6e13faa4.css">
   </head>
+  <style>
+    body {
+      background-image: url(bg.png);
+      background-color: #fcfaf2;
+    }
+    .logo {
+      width: 130px;
+      height: 130px;
+    }
+    #app-loading {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 999;
+      background-image: url(bg.png);
+      background-color: #fcfaf2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: PingFang SC, -apple-system, BlinkMacSystemFont, "lxgw",
+        Helvetica Neue, Helvetica, sans-serif;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    #app-loading p{
+      margin: 0;
+    }
+  </style>
   <body>
+    <div id="app-loading">
+      <img class="logo" src="./assets/logo-1bc82436.png" />
+      <p>MDkeep</p>
+    </div>
     <div id="app"></div>
     
   </body>
