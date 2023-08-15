@@ -51,7 +51,8 @@ const createWindow = () => {
   //   ? mainWindow.loadURL("http://localhost:5173/")
   //   : 
     mainWindow.loadFile("vitebuild/index.html");
-  isDev && mainWindow.webContents.openDevTools();
+  // isDev && mainWindow.webContents.openDevTools();
+  mainWindow.webContents.openDevTools();
 };
 
 // 这段程序将会在 Electron 结束初始化

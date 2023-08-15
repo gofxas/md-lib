@@ -1,5 +1,10 @@
 const { Sequelize, DataTypes } = require("sequelize");
 const path = require("path");
+const fs = require('fs');
+if (!fs.existsSync('backup')) {
+  fs.mkdirSync('backup')
+}
+
 const { Files, Configs } = require("../database/index.js");
 const Op = Sequelize.Op;
 

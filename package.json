@@ -59,7 +59,7 @@
     "vuex": "^4.1.0"
   },
   "build": {
-    "icon": "./icon.png",
+    "icon": "./logo.ico",
     "asar": true,
     "compression": "normal",
     "nsis": {
@@ -72,8 +72,9 @@
       "shortcutName": "文笥"
     },
     "win": {
+      "requestedExecutionLevel":"requireAdministrator",
       "artifactName": "${productName}_${version}.${ext}",
-      "icon": "./icon.png",
+      "icon": "./logo.ico",
       "target": [
         {
           "target": "nsis",

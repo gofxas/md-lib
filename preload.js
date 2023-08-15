@@ -6,7 +6,7 @@ const database = require("./database/service");
 const Diffinstance = require("./backup/index.js");
 
 
-const readme = fs.readFileSync(path.join(__dirname, "README.md"), {
+const readme = fs.readFileSync(path.join(__dirname,"README.md"), {
   encoding: "utf-8",
 });
 const BD_APP_KEY = "uUDl9eiBcGG1YAaIeF6u97VI7fCkWAEt";
